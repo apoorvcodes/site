@@ -40,7 +40,6 @@ export default function Page() {
             in America. I deeply love blockchain and specially its implementation, I also do research work when I am idle, I am a master of building backend infrastructure which scales.`}
           </span>
         </section>
-
         <section className="flex w-full max-w-[750px] flex-col gap-y-3">
           <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold">
             What I love?
@@ -71,7 +70,7 @@ export default function Page() {
            Ive won more than 20 hackathons, including {""}
            <ExternalLink href="https://unfold.devfolio.co">Unfold</ExternalLink>, {""}
            <ExternalLink href="https://hackjklu.devfolio.co/">HackJKLU</ExternalLink> and {""}
-           <ExternalLink href="https://warpspeed.devfolio.co">WarpSpeed</ExternalLink>. I've recieved over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR ">65k USD</ExternalLink> as grants for my ventures from {""}
+           <ExternalLink href="https://warpspeed.devfolio.co">WarpSpeed</ExternalLink>. I&apos;ve recieved over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR ">65k USD</ExternalLink> as grants for my ventures from {""}
            <ExternalLink href="https://polygon.technology">Polygon</ExternalLink>, {""}
            <ExternalLink href="https://home.iitd.ac.in">IIT Delhi</ExternalLink>, {""}
            <ExternalLink href="https://solana.com">Solana</ExternalLink>, {""}
