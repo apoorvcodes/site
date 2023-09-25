@@ -37,7 +37,7 @@ export default function Page() {
           </h1>
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
             {`Well my name is Apoorv singh, a ${calculateAge()}-year-old student and software developer from India now looking to shift
-            in America. I deeply love blockchain and specially its implementation, I also do research work when I'm idle, I'm a master of building backend infrastructure which scales.`}
+            in America. I deeply love blockchain and specially its implementation, I also do research work when I am idle, I am a master of building backend infrastructure which scales.`}
           </span>
         </section>
 
@@ -55,7 +55,7 @@ export default function Page() {
             <ExternalLink href="https://go.dev/doc/">Golang</ExternalLink>.
           </span>
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            Not as much as I used to but I also like to build hardware solutions for day to day problems, you can check out what project's I&apos;ve
+            Not as much as I used to but I also like to build hardware solutions for day to day problems, you can check out what projects I&apos;ve
             been working recently on my{" "}
             <ExternalLink href="https://github.com/apoorvcodes">Github Profile</ExternalLink>.
           </span>
@@ -68,9 +68,9 @@ export default function Page() {
           </h1>
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
           Well, I love participating in hackathons, especially web3 ones.
-           I've won more than 20 hackathons, including {""}
+           Ive won more than 20 hackathons, including {""}
            <ExternalLink href="https://unfold.devfolio.co">Unfold</ExternalLink>, {""}
-           <ExternalLink href="https://hackjklu.devfolio.co/">HackJKLU</ExternalLink> , and {""}
+           <ExternalLink href="https://hackjklu.devfolio.co/">HackJKLU</ExternalLink> and {""}
            <ExternalLink href="https://warpspeed.devfolio.co">WarpSpeed</ExternalLink>. I've recieved over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR ">65k USD</ExternalLink> as grants for my ventures from {""}
            <ExternalLink href="https://polygon.technology">Polygon</ExternalLink>, {""}
            <ExternalLink href="https://home.iitd.ac.in">IIT Delhi</ExternalLink>, {""}
@@ -80,11 +80,11 @@ export default function Page() {
 
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
             I also happen to be one of the finalists of the <ExternalLink href="https://www.symbolic.capital/fellowship">Nailwal fellowship</ExternalLink>, I was the only highschooler to reach that feat, 
-            in addition to this I also started one of the first <ExternalLink href="https://hackclub.com">Hack Club</ExternalLink> in my state, we've impacted 3k+ students, 25+ schools and held 100+ sessions.{" "}
+            in addition to this I also started one of the first <ExternalLink href="https://hackclub.com">Hack Club</ExternalLink> in my state, weve impacted 3k+ students, 25+ schools and held 100+ sessions.{" "}
           </span>
 
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            Finally I'm the only Indian kid to win both <ExternalLink href="https://youthideathon.in">YI 2022</ExternalLink> and <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">Cbse Science Exhibition</ExternalLink>, both being one of the biggest fairs held in India.{" "}
+            Finally Im the only Indian kid to win both <ExternalLink href="https://youthideathon.in">YI 2022</ExternalLink> and <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">Cbse Science Exhibition</ExternalLink>, both being one of the biggest fairs held in India.{" "}
           </span>
 
         </section>
@@ -104,7 +104,7 @@ export default function Page() {
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
             I love building backend infrastructure mainly in <ExternalLink href="https://go.dev">Golang</ExternalLink>,{" "}
             I use my inhouse backend framework which I built from scratch <ExternalLink href="https://github.com/gominima/minima">Gominima</ExternalLink>,{" "}
-            sometimes when I'm in a hurry, I use <ExternalLink href="https://nodejs.org/en">Nodejs</ExternalLink>, lastly I absolutely love <ExternalLink href="https://graphql.org">Graphql</ExternalLink>.
+            sometimes when Im in a hurry, I use <ExternalLink href="https://nodejs.org/en">Nodejs</ExternalLink>, lastly I absolutely love <ExternalLink href="https://graphql.org">Graphql</ExternalLink>.
           </span>
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
             I know bits of everything, so if you wanna work on something cool just shoot me a mail!
@@ -118,10 +118,10 @@ export default function Page() {
           </h1>
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
           Well, I love participating in hackathons, especially web3 ones.
-           I've won more than 20 hackathons, including {""}
+           Ive won more than 20 hackathons, including {""}
            <ExternalLink href="https://unfold.devfolio.co">Unfold</ExternalLink>, {""} 
            <ExternalLink href="https://hackjklu.devfolio.co/">HackJKLU</ExternalLink> , and {""} 
-           <ExternalLink href="https://warpspeed.devfolio.co">WarpSpeed</ExternalLink>. I've recieved over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR ">65k USD</ExternalLink> as grants for my ventures from {""}
+           <ExternalLink href="https://warpspeed.devfolio.co">WarpSpeed</ExternalLink>. Ive recieved over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR ">65k USD</ExternalLink> as grants for my ventures from {""}
            <ExternalLink href="https://polygon.technology">Polygon</ExternalLink>, {""} 
            <ExternalLink href="https://home.iitd.ac.in">IIT Delhi</ExternalLink>, {""} 
            <ExternalLink href="https://solana.com">Solana</ExternalLink>, {""} 
@@ -130,11 +130,11 @@ export default function Page() {
 
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
             I also happen to be one of the finalists of the <ExternalLink href="https://www.symbolic.capital/fellowship">Nailwal fellowship</ExternalLink>, I was the only highschooler to reach that feat, 
-            in addition to this I also started one of the first <ExternalLink href="https://hackclub.com">Hack Club</ExternalLink> in my state, we've impacted 3k+ students, 25+ schools and held 100+ sessions.{" "}
+            in addition to this I also started one of the first <ExternalLink href="https://hackclub.com">Hack Club</ExternalLink> in my state, weve impacted 3k+ students, 25+ schools and held 100+ sessions.{" "}
           </span>
 
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            Finally I'm the only Indian kid to win both <ExternalLink href="https://youthideathon.in">YI 2022</ExternalLink> and <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">Cbse Science Exhibition</ExternalLink>, both being one of the biggest fairs held in India.{" "}
+            Finally Im the only Indian kid to win both <ExternalLink href="https://youthideathon.in">YI 2022</ExternalLink> and <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">Cbse Science Exhibition</ExternalLink>, both being one of the biggest fairs held in India.{" "}
           </span>
 
         </section>
@@ -145,10 +145,10 @@ export default function Page() {
             <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20" />
           </h1>
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            I'm currently applying to <ExternalLink href="https://www.stanford.edu">Stanford University</ExternalLink> class of 2028 as a major in <ExternalLink href="https://www.cs.stanford.edu">Computer Science</ExternalLink> in my REA {"(Restrictive Early Action)"}.
+            Im currently applying to <ExternalLink href="https://www.stanford.edu">Stanford University</ExternalLink> class of 2028 as a major in <ExternalLink href="https://www.cs.stanford.edu">Computer Science</ExternalLink> in my REA {"(Restrictive Early Action)"}.
           </span>
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            I'm also doing my research on Genomics matching through ML with professors at <ExternalLink href="https://iitbhu.ac.in">IIT Bhu</ExternalLink>, 
+            Im also doing my research on Genomics matching through ML with professors at <ExternalLink href="https://iitbhu.ac.in">IIT Bhu</ExternalLink>, 
             looking forward to presenting the project at <ExternalLink href="https://www.irisnationalfair.org">Iris</ExternalLink> and go onto represent India at <ExternalLink href="https://www.societyforscience.org/isef/">Isef 2023</ExternalLink>
           </span>
         </section>
