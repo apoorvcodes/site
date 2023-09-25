@@ -71,7 +71,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} bg-[#0d1321] flex h-full min-h-screen flex-col items-center`}>
+      <body className={`${inter.className} bg-[#0d1321] flex h-full min-h-screen flex-col items-center`}>
         {children}
         <Footer />
         <Analytics />
