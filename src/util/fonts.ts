@@ -1,8 +1,8 @@
-import { Inter } from "next/font/google"
+import { Montserrat } from "next/font/google"
 
-const inter = Inter({
+const inter = Montserrat({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-montserrat",
 })
 
 export { inter }
