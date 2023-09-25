@@ -19,16 +19,16 @@ const statusMappings = {
 } as const
 
 export default function DiscordStatus() {
-  const { data, isLoading } = useLanyard({ userId: DISCORD_USER_ID })
+  const { data, isLoading } = useLanyard({ userId: "924252039737905162" })
 
-  const color = isLoading ? "bg-gray-500" : statusColors[data?.data.discord_status ?? "offline"]
+  const color = isLoading ? "bg-green-500" : statusColors[data?.data.discord_status ?? "online"]
 
   const status = data?.data.discord_status
-
+  console.log(status)
   return (
     <aside className="flex items-center gap-2 font-semibold">
       <div className={`h-3 w-3 rounded-full ${color}`} />
-      <p className="text-left">{status ? statusMappings[status] : "Loading..."}</p>
+      <p className="text-left">{status ? statusMappings[status] : statusMappings["online"]}</p>
     </aside>
   )
 }

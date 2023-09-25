@@ -8,17 +8,17 @@ import Footer from "@/components/Footer"
 
 export const metadata: Metadata = {
   appleWebApp: {
-    title: "Danial Raza",
+    title: "Apoorv Singh",
   },
-  applicationName: "Danial Raza",
-  authors: [{ name: "Danial Raza", url: "https://github.com/sdanialraza" }],
+  applicationName: "Apoorv Singh",
+  authors: [{ name: "Apoorv Singh", url: "https://github.com/apoorvcodes" }],
   category: "Personal Site",
   colorScheme: "dark light",
-  creator: "Danial Raza",
-  description: "Personal website of Danial Raza.",
+  creator: "Apoorv Singh",
+  description: "Personal website of Apoorv Singh.",
   icons: {
     apple: [
-      "/apple-touch-icon.png",
+      "/logo.jpeg",
       {
         url: "/safari-pinned-tab.svg",
         rel: "mask-icon",
@@ -26,44 +26,40 @@ export const metadata: Metadata = {
     ],
     other: [
       {
-        url: "/favicon-32x32.png",
+        url: "/logo.jpeg",
         sizes: "32x32",
         type: "image/png",
       },
       {
-        url: "/favicon-16x16.png",
+        url: "/logo.jpeg",
         sizes: "16x16",
         type: "image/png",
       },
     ],
   },
-  keywords: ["sdanialraza", "Danial Raza", "Danial", "Raza", "Website", "Portfolio", "Projects"],
+  keywords: ["apxrv", "Apoorv Singh", "apoorv", "singh", "Website", "Portfolio", "Projects"],
   manifest: "/site.manifest",
   metadataBase: new URL(BASE_URL),
   openGraph: {
-    description: "Personal website of Danial Raza.",
-    siteName: "Danial Raza",
-    title: "Danial Raza",
+    description: "Personal website of Apoorv Singh.",
+    siteName: "Apoorv Singh",
+    title: "Apoorv Singh",
     type: "website",
     url: new URL(BASE_URL),
   },
   other: {
-    "msapplication-TileColor": "#e4717a",
+    "msapplication-TileColor": "#0d1321",
   },
   themeColor: [
-    { color: "e4717a" },
-    {
-      media: "(prefers-color-scheme: light)",
-      color: "#ffffff",
-    },
+    { color: "0d1321" },
     {
       media: "(prefers-color-scheme: dark)",
-      color: "#1c1b22",
+      color: "#0d1321",
     },
   ],
   title: {
-    default: "Danial Raza",
-    template: "%s | Danial Raza",
+    default: "Apoorv Singh",
+    template: "%s | Apoorv Singh",
   },
   viewport: {
     minimumScale: 1,
@@ -75,7 +71,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} flex h-full min-h-screen flex-col items-center`}>
+      <body className={`${inter.variable} bg-[#0d1321] flex h-full min-h-screen flex-col items-center`}>
         {children}
         <Footer />
         <Analytics />

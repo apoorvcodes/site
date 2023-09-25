@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="flex w-full max-w-[850px] items-center justify-between text-sm text-gray-700 dark:text-gray-400">
         <section className="flex">
           <h1 className="text-md font-semibold">
-            Danial Raza &mdash; <ExternalLink href={REPOSITORY_LINK}>Source Code</ExternalLink>
+            Apoorv Singh &mdash; <ExternalLink href={REPOSITORY_LINK}>Source Code</ExternalLink>
           </h1>
         </section>
 
