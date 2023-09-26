@@ -110,33 +110,7 @@ export default function Page() {
           </span>
         </section>
         
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold">
-            What have I done?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20" />
-          </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-          Well, I love participating in hackathons, especially web3 ones.
-           Ive won more than 20 hackathons, including {""}
-           <ExternalLink href="https://unfold.devfolio.co">Unfold</ExternalLink>, {""} 
-           <ExternalLink href="https://hackjklu.devfolio.co/">HackJKLU</ExternalLink> , and {""} 
-           <ExternalLink href="https://warpspeed.devfolio.co">WarpSpeed</ExternalLink>. Ive recieved over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR ">65k USD</ExternalLink> as grants for my ventures from {""}
-           <ExternalLink href="https://polygon.technology">Polygon</ExternalLink>, {""} 
-           <ExternalLink href="https://home.iitd.ac.in">IIT Delhi</ExternalLink>, {""} 
-           <ExternalLink href="https://solana.com">Solana</ExternalLink>, {""} 
-           <ExternalLink href="https://www.cbse.gov.in">Cbse</ExternalLink> just to name a few.
-          </span>
 
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            I also happen to be one of the finalists of the <ExternalLink href="https://www.symbolic.capital/fellowship">Nailwal fellowship</ExternalLink>, I was the only highschooler to reach that feat, 
-            in addition to this I also started one of the first <ExternalLink href="https://hackclub.com">Hack Club</ExternalLink> in my state, weve impacted 3k+ students, 25+ schools and held 100+ sessions.{" "}
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            Finally Im the only Indian kid to win both <ExternalLink href="https://youthideathon.in">YI 2022</ExternalLink> and <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">Cbse Science Exhibition</ExternalLink>, both being one of the biggest fairs held in India.{" "}
-          </span>
-
-        </section>
 
         <section className="flex w-full max-w-[750px] flex-col gap-y-3">
           <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold">
