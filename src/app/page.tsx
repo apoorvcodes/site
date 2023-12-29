@@ -37,7 +37,7 @@ export default function Page() {
           </h1>
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
             {`Well my name is Apoorv singh, a ${calculateAge()}-year-old student and software developer from India now looking to shift
-            in America. I deeply love blockchain and specially its implementation, I also do research work when I am idle, I am a master of building backend infrastructure which scales.`}
+            in America. I deeply love LLMs and specially its implementation, I also do research work when I am idle, I am a master of building backend infrastructure which scales.`}
           </span>
         </section>
         <section className="flex w-full max-w-[750px] flex-col gap-y-3">
