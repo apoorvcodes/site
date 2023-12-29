@@ -117,12 +117,9 @@ export default function Page() {
             What am I doing rn?
             <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20" />
           </h1>
+          
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            Im currently applying to <ExternalLink href="https://www.stanford.edu">Stanford University</ExternalLink> class of 2028 as a major in <ExternalLink href="https://www.cs.stanford.edu">Computer Science</ExternalLink> in my REA {"(Restrictive Early Action)"}.
-          </span>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            Im also doing my research on Genomics matching through ML with professors at <ExternalLink href="https://iitbhu.ac.in">IIT Bhu</ExternalLink>, 
-            looking forward to presenting the project at <ExternalLink href="https://www.irisnationalfair.org">Iris</ExternalLink> and go onto represent India at <ExternalLink href="https://www.societyforscience.org/isef/">Isef 2023</ExternalLink>
+            Current building <ExternalLink href="https://heyconn.ai">Connect</ExternalLink> a personal co-pilot with global context awareness, based on your day-to-day interactions, capable of autonomously performing tasks.
           </span>
         </section>
 
