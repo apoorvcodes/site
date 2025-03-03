@@ -37,7 +37,7 @@ export default function Page() {
             <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
           </h1>
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Hey! I am Apoorv, an 18-year-old developer and researcher. I was born in a small town called Varanasi but now I've shifted to Bangalore. I decided to skip college and focus on building cool stuff instead. I'm super into AI and love tinkering with backend systems. Right now I'm planning to move to San Francisco by the end of this year - pretty excited about that!
+            Hey! I am Apoorv, an 18-year-old developer and researcher. I was born in a small town called Varanasi but now I've shifted to Bangalore. I decided to skip college and focus on building cool stuff instead. I'm super into AI and love tinkering with backend systems. Right now I am now planning to move to San Francisco by the end of this year - pretty excited about that!
           </span>
         </section>
         <section className="flex w-full max-w-[750px] flex-col gap-y-3">
