@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 import { calculateAge } from "@/util"
 import CurrentTime from "@/components/CurrentTime"
@@ -14,7 +15,7 @@ export default function Page() {
           <div className="flex items-center gap-x-1">
             <Image
               alt="Profile Picture"
-              className="h-[60px] w-[60px] rounded-full bg-cover md:h-[80px] md:w-[80px] lg:h-[100px] lg:w-[100px]"
+              className="h-[70px] w-[70px] rounded-full bg-cover transition-transform duration-300 hover:scale-105 md:h-[80px] md:w-[80px] lg:h-[100px] lg:w-[100px]"
               priority
               src={profilePicture}
             />
@@ -26,100 +27,95 @@ export default function Page() {
               &mdash;
               <CurrentTime />
             </aside>
-            <h1 className="text-3xl font-bold">Apoorv Singh</h1>
+            <h1 className="text-4xl font-bold pt-1">Apoorv Singh</h1>
           </section>
         </div>
 
         <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold">
+          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
             Who am I?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20" />
+            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
           </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            {`Well my name is Apoorv singh, a ${calculateAge()}-year-old student and software developer from India now looking to shift
-            in America. I deeply love LLMs and specially its implementation, I also do research work when I am idle, I am a master of building backend infrastructure which scales.`}
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            {`Hey! I'm Apoorv, an 18-year-old developer and researcher currently living in Bangalore. I decided to skip college and focus on building cool stuff instead. I'm super into AI and love tinkering with backend systems. Right now I'm planning to move to San Francisco by the end of this year - pretty excited about that!`}
           </span>
         </section>
         <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold">
+          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
             What I love?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20" />
+            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
           </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            I usually like to watch some animes or read documentation in my free time. A couple of my favorite animes would be{" "}
-            <ExternalLink href="https://www.imdb.com/title/tt5626028/">My Hero Academia</ExternalLink> and{" "}
-            <ExternalLink href="https://www.imdb.com/title/tt12343534/">Jujutsu Kaisen</ExternalLink> and a couple of my
-            favorite docs would be{" "}
-            <ExternalLink href="https://vuejs.org">Vue</ExternalLink> and{" "}
-            <ExternalLink href="https://go.dev/doc/">Golang</ExternalLink>.
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            A bit about me is that I love watching football - I'm a huge Barça fan (PS: hope we win CL this year lol). I also love watching anime, 
+            especially seinen ones. My absolute favorites are{" "}
+            <ExternalLink href="https://www.imdb.com/title/tt7984734/">Made in Abyss</ExternalLink> and{" "}
+            <ExternalLink href="https://www.imdb.com/title/tt10233448/">Vinland Saga</ExternalLink>.
           </span>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            Not as much as I used to but I also like to build hardware solutions for day to day problems, you can check out what projects I&apos;ve
-            been working recently on my{" "}
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            As for my passions, I absolutely love LLMs, transformers and hardware. Back in school, I spent most of my time bunking classes 
+            and building stuff in the labs (I was pretty damn good at it too!). You can check out some of my hardware projects on my{" "}
             <ExternalLink href="https://github.com/apoorvcodes">Github Profile</ExternalLink>.
           </span>
         </section>
 
         <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold">
+          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
             What have I done?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20" />
+            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
           </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-          Well, I love participating in hackathons, especially web3 ones.
-           Ive won more than 20 hackathons, including {""}
-           <ExternalLink href="https://unfold.devfolio.co">Unfold</ExternalLink>, {""}
-           <ExternalLink href="https://hackjklu.devfolio.co/">HackJKLU</ExternalLink> and {""}
-           <ExternalLink href="https://warpspeed.devfolio.co">WarpSpeed</ExternalLink>. I&apos;ve recieved over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR ">65k USD</ExternalLink> as grants for my ventures from {""}
-           <ExternalLink href="https://polygon.technology">Polygon</ExternalLink>, {""}
-           <ExternalLink href="https://home.iitd.ac.in">IIT Delhi</ExternalLink>, {""}
-           <ExternalLink href="https://solana.com">Solana</ExternalLink>, {""}
-           <ExternalLink href="https://www.cbse.gov.in">Cbse</ExternalLink> just to name a few.
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            The first thing I built was an NLP-based COVID tracking bot for spreading awareness on Discord. It went viral at its peak—I handled 500K+ users, and the bot was also verified on Discord. (I was just 14, had to use my dad's ID.) I reverse-engineered Discord for hosting self-bots (got three IDs banned), then went on to learn Golang.
           </span>
 
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            I also happen to be one of the finalists of the <ExternalLink href="https://www.symbolic.capital/fellowship">Nailwal fellowship</ExternalLink>, I was the only highschooler to reach that feat, 
-            in addition to this I also started one of the first <ExternalLink href="https://hackclub.com">Hack Club</ExternalLink> in my state, weve impacted 3k+ students, 25+ schools and held 100+ sessions.{" "}
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            I built a framework like Express but around 50x faster for personal use—got over 150 stars organically. As per my knowledge, around five companies use it right now, including major projects my institute maintains. Moved to crypto for the fun of it, came top 5 in my first hackathon (biggest multichain hackathon at the time), was a core member in Saturn. We received a $50K grant from Sandeep Nailwal (didn't work out well).
           </span>
 
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            Finally Im the only Indian kid to win both <ExternalLink href="https://youthideathon.in">YI 2022</ExternalLink> and <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">Cbse Science Exhibition</ExternalLink>, both being one of the biggest fairs held in India.{" "}
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            Did hackathons in between, won around five premier hacks, wrote a couple of compilers here and there. In total, I've received over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR">$65K</ExternalLink> in grants and prizes.
           </span>
 
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            This was my first phase of life.
+          </span>
+
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            In my senior years, I did a lot of huge science fairs. I'm still the only kid to podium in both <ExternalLink href="https://youthideathon.in">Youth Ideathon</ExternalLink> (Won in '22) and the <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">CBSE Science Exhibition</ExternalLink> (Podium '22).
+          </span>
+
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            When I was 17, I was offered the <ExternalLink href="https://www.symbolic.capital/fellowship">Nailwal Fellowship</ExternalLink> ($100K in total) but decided not to take it. Apart from this, I came 2nd in the biggest multichain hackathon (<ExternalLink href="https://unfold.devfolio.co">Unfold '23</ExternalLink>)—once again, the youngest winner.
+          </span>
+
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            Later, I moved out of crypto and focused on AI and human interfaces as a whole. I built <ExternalLink href="https://heyconn.ai">Connect AI</ExternalLink>—a Jarvis-like human-computer interface that could convert thoughts into action and perform tasks like a human. We went viral on Twitter—500K views in a day—top founders and VCs approaching for investment. Couldn't translate well as a business, so I moved away from it. (Some sneak peeks for later—I'm gonna reuse it at the end of the year for something even bigger.)
+          </span>
+
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            I also wrote the AI pipeline and benchmarks for kids' AI at <ExternalLink href="https://heypixа.ai">HeyPixa.ai</ExternalLink>—just for fun. Pixa is gonna be in UK stores by the end of the year.
+          </span>
+
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            Then I built a Zapier-like service but for browser agents—in a week—for WTFund. Went till finals. Got rejected 'cause I was too early.
+          </span>
+
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            Now, I've co-founded a research lab with a couple of my friends from IITs, and we're soon gonna release our first research!
+          </span>
         </section>
 
         <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold">
-            What is my Techstack?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20" />
-          </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            I primarily work with <ExternalLink href="https://www.typescriptlang.org/">TypeScript</ExternalLink>,{" "}
-            <ExternalLink href="https://tailwindcss.com">Tailwindcss</ExternalLink>,{" "}
-            <ExternalLink href="https://reactjs.org/">React</ExternalLink> (with TSX) when working in a frontend environment and I&apos;ve had a lot of experiences
-            with some world class frameworks like <ExternalLink href="https://vuejs.org">Vuejs</ExternalLink> and{" "}
-            <ExternalLink href="https://svelte.dev">Svelte</ExternalLink>.
-          </span>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            I love building backend infrastructure mainly in <ExternalLink href="https://go.dev">Golang</ExternalLink>,{" "}
-            I use my inhouse backend framework which I built from scratch <ExternalLink href="https://github.com/gominima/minima">Gominima</ExternalLink>,{" "}
-            sometimes when Im in a hurry, I use <ExternalLink href="https://nodejs.org/en">Nodejs</ExternalLink>, lastly I absolutely love <ExternalLink href="https://graphql.org">Graphql</ExternalLink>.
-          </span>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            I know bits of everything, so if you wanna work on something cool just shoot me a mail!
-          </span>
-        </section>
-        
-
-
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold">
-            What am I doing rn?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20" />
+          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
+            Plans and Future?
+            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
           </h1>
           
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray">
-            Current building <ExternalLink href="https://heyconn.ai">Connect</ExternalLink> a personal co-pilot with global context awareness, based on your day-to-day interactions, capable of autonomously performing tasks.
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            Currently conducting voice-to-voice research at my AI lab and building a prompt editor for in-house usage. Long-term, I have major plans for human-computer interfaces, particularly in hardware, scheduled for the end of the year—something that will revolutionize human interactions forever!
+          </span>
+          
+          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
+            If you're an engineer interested in working with the lab or on the HCI project, feel free to email or DM me.
           </span>
         </section>
 
