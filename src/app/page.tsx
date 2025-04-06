@@ -84,7 +84,7 @@ export default function Page() {
           </span>
 
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            When I was 17, I was offered the <ExternalLink href="https://www.symbolic.capital/fellowship">Nailwal Fellowship</ExternalLink> ($100K in total) but decided not to take it. Apart from this, I came 2nd in the biggest multichain hackathon (<ExternalLink href="https://unfold.devfolio.co">Unfold &apos;23</ExternalLink>)—once again, the youngest winner.
+            When I was 17, I was offered the <ExternalLink href="https://www.symbolic.capital/fellowship">Nailwal Fellowship</ExternalLink> ($50K in total) but decided not to take it. Apart from this, I came 2nd in the biggest multichain hackathon (<ExternalLink href="https://unfold.devfolio.co">Unfold &apos;23</ExternalLink>)—once again, the youngest winner.
           </span>
 
           <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
