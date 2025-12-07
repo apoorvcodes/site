@@ -7,7 +7,9 @@ import {
   ClipboardItem, 
   ResearchPaper, 
   EmailNote,
+  Goal,
   PaperStatus,
+  GoalStatus,
   getTodayString,
   formatDate 
 } from "@/lib/supabase"
@@ -16,24 +18,29 @@ export default function DumpPage() {
   const [authenticated, setAuthenticated] = useState(false)
   const [password, setPassword] = useState("")
   const [loginError, setLoginError] = useState(false)
-  const [activeTab, setActiveTab] = useState<"tasks" | "clipboard" | "papers" | "emails">("tasks")
+  const [activeTab, setActiveTab] = useState<"tasks" | "goals" | "clipboard" | "papers" | "emails">("tasks")
   
   // Data states
   const [tasks, setTasks] = useState<Task[]>([])
+  const [goals, setGoals] = useState<Goal[]>([])
   const [clipboard, setClipboard] = useState<ClipboardItem[]>([])
   const [papers, setPapers] = useState<ResearchPaper[]>([])
   const [emails, setEmails] = useState<EmailNote[]>([])
   
   // Input states
   const [newTask, setNewTask] = useState({ content: "", priority: "medium" as Task["priority"] })
+  const [newGoal, setNewGoal] = useState({ title: "", description: "" })
   const [newClipboard, setNewClipboard] = useState({ content: "", label: "" })
-  const [newPaperUrl, setNewPaperUrl] = useState("")
+  const [newPaper, setNewPaper] = useState({ url: "", title: "" })
   const [newEmail, setNewEmail] = useState({ subject: "", reason: "", priority: "medium" as EmailNote["priority"] })
   const [loading, setLoading] = useState(false)
   const [selectedDate, setSelectedDate] = useState(getTodayString())
   const [paperFilter, setPaperFilter] = useState<PaperStatus | "all">("all")
+  const [goalFilter, setGoalFilter] = useState<GoalStatus | "all">("active")
   const [editingPaper, setEditingPaper] = useState<string | null>(null)
+  const [editingGoal, setEditingGoal] = useState<string | null>(null)
   const [outcomeInput, setOutcomeInput] = useState("")
+  const [ditchReasonInput, setDitchReasonInput] = useState("")
 
   useEffect(() => {
     const stored = localStorage.getItem("dump_auth")
@@ -72,14 +79,16 @@ export default function DumpPage() {
   }
 
   const fetchAll = async () => {
-    const [tasksRes, clipRes, papersRes, emailsRes] = await Promise.all([
+    const [tasksRes, goalsRes, clipRes, papersRes, emailsRes] = await Promise.all([
       supabase.from("tasks").select("*").order("created_at", { ascending: false }),
+      supabase.from("goals").select("*").order("created_at", { ascending: false }),
       supabase.from("clipboard").select("*").order("created_at", { ascending: false }),
       supabase.from("papers").select("*").order("created_at", { ascending: false }),
       supabase.from("emails").select("*").order("created_at", { ascending: false }),
     ])
     
     if (tasksRes.data) setTasks(tasksRes.data)
+    if (goalsRes.data) setGoals(goalsRes.data)
     if (clipRes.data) setClipboard(clipRes.data)
     if (papersRes.data) setPapers(papersRes.data)
     if (emailsRes.data) setEmails(emailsRes.data)
@@ -92,14 +101,8 @@ export default function DumpPage() {
     
     const { data } = await supabase
       .from("tasks")
-      .insert({ 
-        content: newTask.content, 
-        completed: false, 
-        date: selectedDate,
-        priority: newTask.priority 
-      })
-      .select()
-      .single()
+      .insert({ content: newTask.content, completed: false, date: selectedDate, priority: newTask.priority })
+      .select().single()
     
     if (data) setTasks([data, ...tasks])
     setNewTask({ content: "", priority: "medium" })
@@ -115,6 +118,43 @@ export default function DumpPage() {
     setTasks(tasks.filter(t => t.id !== id))
   }
 
+  // Goal functions
+  const addGoal = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!newGoal.title.trim()) return
+    
+    const { data } = await supabase
+      .from("goals")
+      .insert({ title: newGoal.title, description: newGoal.description || null, status: 'active' })
+      .select().single()
+    
+    if (data) setGoals([data, ...goals])
+    setNewGoal({ title: "", description: "" })
+  }
+
+  const completeGoal = async (id: string) => {
+    const completed_at = new Date().toISOString()
+    await supabase.from("goals").update({ status: 'completed', completed_at }).eq("id", id)
+    setGoals(goals.map(g => g.id === id ? { ...g, status: 'completed' as GoalStatus, completed_at } : g))
+  }
+
+  const ditchGoal = async (id: string) => {
+    await supabase.from("goals").update({ status: 'ditched', ditch_reason: ditchReasonInput }).eq("id", id)
+    setGoals(goals.map(g => g.id === id ? { ...g, status: 'ditched' as GoalStatus, ditch_reason: ditchReasonInput } : g))
+    setEditingGoal(null)
+    setDitchReasonInput("")
+  }
+
+  const reactivateGoal = async (id: string) => {
+    await supabase.from("goals").update({ status: 'active', completed_at: null, ditch_reason: null }).eq("id", id)
+    setGoals(goals.map(g => g.id === id ? { ...g, status: 'active' as GoalStatus, completed_at: null, ditch_reason: null } : g))
+  }
+
+  const deleteGoal = async (id: string) => {
+    await supabase.from("goals").delete().eq("id", id)
+    setGoals(goals.filter(g => g.id !== id))
+  }
+
   // Clipboard functions
   const addClipboard = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -123,8 +163,7 @@ export default function DumpPage() {
     const { data } = await supabase
       .from("clipboard")
       .insert({ content: newClipboard.content, label: newClipboard.label || null })
-      .select()
-      .single()
+      .select().single()
     
     if (data) setClipboard([data, ...clipboard])
     setNewClipboard({ content: "", label: "" })
@@ -139,45 +178,48 @@ export default function DumpPage() {
     navigator.clipboard.writeText(content)
   }
 
-  // Paper functions with metadata fetch (via server API to avoid CORS)
+  // Paper functions
   const fetchPaperMetadata = async (url: string) => {
+    if (!url || !url.startsWith("http")) return { title: null, authors: null, abstract: null }
     try {
       const res = await fetch("/api/paper-metadata", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url }),
       })
-      
-      if (res.ok) {
-        return await res.json()
-      }
+      if (res.ok) return await res.json()
     } catch (err) {
       console.error("Failed to fetch metadata:", err)
     }
-    
     return { title: null, authors: null, abstract: null }
   }
 
   const addPaper = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newPaperUrl.trim()) return
+    if (!newPaper.url.trim() && !newPaper.title.trim()) return
     setLoading(true)
 
-    const metadata = await fetchPaperMetadata(newPaperUrl)
+    let metadata = { title: newPaper.title || null, authors: null, abstract: null }
+    
+    // Only fetch metadata if URL provided and no manual title
+    if (newPaper.url && !newPaper.title) {
+      metadata = await fetchPaperMetadata(newPaper.url)
+    }
 
     const { data } = await supabase
       .from("papers")
       .insert({ 
-        url: newPaperUrl, 
-        ...metadata,
+        url: newPaper.url || null, 
+        title: metadata.title || newPaper.title || newPaper.url,
+        authors: metadata.authors,
+        abstract: metadata.abstract,
         status: 'to_read',
         outcome: null
       })
-      .select()
-      .single()
+      .select().single()
     
     if (data) setPapers([data, ...papers])
-    setNewPaperUrl("")
+    setNewPaper({ url: "", title: "" })
     setLoading(false)
   }
 
@@ -188,7 +230,7 @@ export default function DumpPage() {
 
   const savePaperOutcome = async (id: string) => {
     await supabase.from("papers").update({ outcome: outcomeInput, status: 'read' }).eq("id", id)
-    setPapers(papers.map(p => p.id === id ? { ...p, outcome: outcomeInput, status: 'read' } : p))
+    setPapers(papers.map(p => p.id === id ? { ...p, outcome: outcomeInput, status: 'read' as PaperStatus } : p))
     setEditingPaper(null)
     setOutcomeInput("")
   }
@@ -199,6 +241,7 @@ export default function DumpPage() {
   }
 
   const refetchMetadata = async (paper: ResearchPaper) => {
+    if (!paper.url) return
     setLoading(true)
     const metadata = await fetchPaperMetadata(paper.url)
     await supabase.from("papers").update(metadata).eq("id", paper.id)
@@ -214,8 +257,7 @@ export default function DumpPage() {
     const { data } = await supabase
       .from("emails")
       .insert({ ...newEmail, done: false })
-      .select()
-      .single()
+      .select().single()
     
     if (data) setEmails([data, ...emails])
     setNewEmail({ subject: "", reason: "", priority: "medium" })
@@ -231,51 +273,28 @@ export default function DumpPage() {
     setEmails(emails.filter(e => e.id !== id))
   }
 
-  // Get unique dates from tasks
+  // Computed values
   const taskDates = Array.from(new Set(tasks.map(t => t.date))).sort().reverse()
   const tasksForSelectedDate = tasks.filter(t => t.date === selectedDate)
+  const filteredPapers = paperFilter === "all" ? papers : papers.filter(p => p.status === paperFilter)
+  const filteredGoals = goalFilter === "all" ? goals : goals.filter(g => g.status === goalFilter)
 
-  // Filter papers
-  const filteredPapers = paperFilter === "all" 
-    ? papers 
-    : papers.filter(p => p.status === paperFilter)
-
-  const priorityColors = {
-    low: "text-ink-muted",
-    medium: "text-amber-600",
-    high: "text-red-500"
-  }
-
-  const statusLabels: Record<PaperStatus, string> = {
-    to_read: "To Read",
-    reading: "Reading",
-    read: "Read"
-  }
+  const priorityColors = { low: "text-ink-muted", medium: "text-amber-600", high: "text-red-500" }
+  const statusLabels: Record<PaperStatus, string> = { to_read: "To Read", reading: "Reading", read: "Read" }
+  const goalStatusLabels: Record<GoalStatus, string> = { active: "Active", completed: "Completed", ditched: "Ditched" }
 
   // Login screen
   if (!authenticated) {
     return (
       <main className="min-h-screen flex items-center justify-center px-6">
         <form onSubmit={handleLogin} className="w-full max-w-xs">
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full px-4 py-3 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted"
-            autoFocus
-          />
-          <button
-            type="submit"
-            className="w-full mt-3 px-4 py-3 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors"
-          >
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password" autoFocus
+            className="w-full px-4 py-3 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
+          <button type="submit" className="w-full mt-3 px-4 py-3 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors">
             Enter
           </button>
-          {loginError && (
-            <p className="mt-2 text-center font-sans text-xs text-red-500">
-              Wrong password
-            </p>
-          )}
+          {loginError && <p className="mt-2 text-center font-sans text-xs text-red-500">Wrong password</p>}
         </form>
       </main>
     )
@@ -283,6 +302,7 @@ export default function DumpPage() {
 
   const tabs = [
     { id: "tasks", label: "Tasks", count: tasksForSelectedDate.filter(t => !t.completed).length },
+    { id: "goals", label: "Goals", count: goals.filter(g => g.status === 'active').length },
     { id: "clipboard", label: "Clipboard", count: clipboard.length },
     { id: "papers", label: "Papers", count: papers.filter(p => p.status !== 'read').length },
     { id: "emails", label: "Emails", count: emails.filter(e => !e.done).length },
@@ -291,33 +311,19 @@ export default function DumpPage() {
   return (
     <main className="min-h-screen pt-16 pb-24 px-6 md:px-8">
       <div className="max-w-3xl mx-auto">
-        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-medium">Dump</h1>
-          <button
-            onClick={handleLogout}
-            className="font-sans text-xs text-ink-muted hover:text-ink transition-colors"
-          >
-            Logout
-          </button>
+          <button onClick={handleLogout} className="font-sans text-xs text-ink-muted hover:text-ink transition-colors">Logout</button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-1 mb-8 p-1 bg-ink/5 rounded-lg">
+        <div className="flex gap-1 mb-8 p-1 bg-ink/5 rounded-lg overflow-x-auto">
           {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 px-4 py-2.5 font-sans text-sm rounded-md transition-colors ${
-                activeTab === tab.id
-                  ? "bg-paper text-ink shadow-sm"
-                  : "text-ink-muted hover:text-ink"
-              }`}
-            >
+            <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 px-3 py-2.5 font-sans text-sm rounded-md transition-colors whitespace-nowrap ${
+                activeTab === tab.id ? "bg-paper text-ink shadow-sm" : "text-ink-muted hover:text-ink"
+              }`}>
               {tab.label}
-              {tab.count > 0 && (
-                <span className="ml-1.5 px-1.5 py-0.5 text-xs bg-ink/10 rounded-full">{tab.count}</span>
-              )}
+              {tab.count > 0 && <span className="ml-1.5 px-1.5 py-0.5 text-xs bg-ink/10 rounded-full">{tab.count}</span>}
             </button>
           ))}
         </div>
@@ -325,117 +331,136 @@ export default function DumpPage() {
         {/* Tasks Tab */}
         {activeTab === "tasks" && (
           <div className="space-y-6">
-            {/* Date selector */}
             <div className="flex items-center gap-2 overflow-x-auto pb-2">
-              {taskDates.length === 0 || !taskDates.includes(getTodayString()) ? (
-                <button
-                  onClick={() => setSelectedDate(getTodayString())}
+              {(taskDates.length === 0 || !taskDates.includes(getTodayString())) && (
+                <button onClick={() => setSelectedDate(getTodayString())}
                   className={`px-3 py-1.5 font-sans text-xs rounded-full whitespace-nowrap transition-colors ${
-                    selectedDate === getTodayString()
-                      ? "bg-ink text-paper"
-                      : "bg-ink/5 text-ink-muted hover:bg-ink/10"
-                  }`}
-                >
-                  Today
-                </button>
-              ) : null}
+                    selectedDate === getTodayString() ? "bg-ink text-paper" : "bg-ink/5 text-ink-muted hover:bg-ink/10"
+                  }`}>Today</button>
+              )}
               {taskDates.map((date) => (
-                <button
-                  key={date}
-                  onClick={() => setSelectedDate(date)}
+                <button key={date} onClick={() => setSelectedDate(date)}
                   className={`px-3 py-1.5 font-sans text-xs rounded-full whitespace-nowrap transition-colors ${
-                    selectedDate === date
-                      ? "bg-ink text-paper"
-                      : "bg-ink/5 text-ink-muted hover:bg-ink/10"
-                  }`}
-                >
-                  {formatDate(date)}
-                  <span className="ml-1 opacity-50">
-                    ({tasks.filter(t => t.date === date && !t.completed).length})
-                  </span>
+                    selectedDate === date ? "bg-ink text-paper" : "bg-ink/5 text-ink-muted hover:bg-ink/10"
+                  }`}>
+                  {formatDate(date)} <span className="ml-1 opacity-50">({tasks.filter(t => t.date === date && !t.completed).length})</span>
                 </button>
               ))}
             </div>
 
-            {/* Add task form */}
-            <form onSubmit={addTask} className="space-y-2">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newTask.content}
-                  onChange={(e) => setNewTask({ ...newTask, content: e.target.value })}
-                  placeholder="New task..."
-                  className="flex-1 px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted"
-                />
-                <select
-                  value={newTask.priority}
-                  onChange={(e) => setNewTask({ ...newTask, priority: e.target.value as Task["priority"] })}
-                  className="px-3 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-xs focus:outline-none focus:border-ink/40"
-                >
-                  <option value="low">Low</option>
-                  <option value="medium">Med</option>
-                  <option value="high">High</option>
-                </select>
-                <button
-                  type="submit"
-                  className="px-4 py-2.5 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors"
-                >
-                  Add
-                </button>
-              </div>
+            <form onSubmit={addTask} className="flex gap-2">
+              <input type="text" value={newTask.content} onChange={(e) => setNewTask({ ...newTask, content: e.target.value })}
+                placeholder="New task..." className="flex-1 px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
+              <select value={newTask.priority} onChange={(e) => setNewTask({ ...newTask, priority: e.target.value as Task["priority"] })}
+                className="px-3 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-xs focus:outline-none">
+                <option value="low">Low</option><option value="medium">Med</option><option value="high">High</option>
+              </select>
+              <button type="submit" className="px-4 py-2.5 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors">Add</button>
             </form>
             
-            {/* Task list */}
             <div className="space-y-1">
-              {tasksForSelectedDate
-                .sort((a, b) => {
-                  if (a.completed !== b.completed) return a.completed ? 1 : -1
-                  const priorityOrder = { high: 0, medium: 1, low: 2 }
-                  return priorityOrder[a.priority] - priorityOrder[b.priority]
-                })
-                .map((task) => (
-                <div
-                  key={task.id}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg group transition-colors ${
-                    task.completed ? "bg-ink/[0.02]" : "bg-ink/[0.04]"
-                  }`}
-                >
-                  <button
-                    onClick={() => toggleTask(task.id, task.completed)}
+              {tasksForSelectedDate.sort((a, b) => {
+                if (a.completed !== b.completed) return a.completed ? 1 : -1
+                return { high: 0, medium: 1, low: 2 }[a.priority] - { high: 0, medium: 1, low: 2 }[b.priority]
+              }).map((task) => (
+                <div key={task.id} className={`flex items-center gap-3 px-4 py-3 rounded-lg group transition-colors ${task.completed ? "bg-ink/[0.02]" : "bg-ink/[0.04]"}`}>
+                  <button onClick={() => toggleTask(task.id, task.completed)}
                     className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors ${
-                      task.completed
-                        ? "bg-ink border-ink text-paper"
-                        : "border-ink/30 hover:border-ink/50"
-                    }`}
-                  >
-                    {task.completed && <span className="text-xs">✓</span>}
-                  </button>
-                  <div className="flex-1 min-w-0">
-                    <span
-                      className={`font-sans text-sm block ${
-                        task.completed ? "line-through text-ink-muted" : ""
-                      }`}
-                    >
-                      {task.content}
-                    </span>
-                  </div>
-                  <span className={`font-sans text-xs ${priorityColors[task.priority]}`}>
-                    {task.priority === "high" && "●"}
-                    {task.priority === "medium" && "○"}
-                  </span>
-                  <button
-                    onClick={() => deleteTask(task.id)}
-                    className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all"
-                  >
-                    ×
-                  </button>
+                      task.completed ? "bg-ink border-ink text-paper" : "border-ink/30 hover:border-ink/50"
+                    }`}>{task.completed && <span className="text-xs">✓</span>}</button>
+                  <span className={`flex-1 font-sans text-sm ${task.completed ? "line-through text-ink-muted" : ""}`}>{task.content}</span>
+                  <span className={`font-sans text-xs ${priorityColors[task.priority]}`}>{task.priority === "high" ? "●" : task.priority === "medium" ? "○" : ""}</span>
+                  <button onClick={() => deleteTask(task.id)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all">×</button>
                 </div>
               ))}
-              {tasksForSelectedDate.length === 0 && (
-                <p className="text-center py-12 text-ink-muted font-sans text-sm">
-                  No tasks for {formatDate(selectedDate)}
-                </p>
-              )}
+              {tasksForSelectedDate.length === 0 && <p className="text-center py-12 text-ink-muted font-sans text-sm">No tasks for {formatDate(selectedDate)}</p>}
+            </div>
+          </div>
+        )}
+
+        {/* Goals Tab */}
+        {activeTab === "goals" && (
+          <div className="space-y-4">
+            <form onSubmit={addGoal} className="space-y-2">
+              <input type="text" value={newGoal.title} onChange={(e) => setNewGoal({ ...newGoal, title: e.target.value })}
+                placeholder="New goal..." className="w-full px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
+              <div className="flex gap-2">
+                <input type="text" value={newGoal.description} onChange={(e) => setNewGoal({ ...newGoal, description: e.target.value })}
+                  placeholder="Description (optional)..." className="flex-1 px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
+                <button type="submit" className="px-4 py-2.5 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors">Add</button>
+              </div>
+            </form>
+
+            <div className="flex gap-1 p-1 bg-ink/5 rounded-lg w-fit">
+              {(["all", "active", "completed", "ditched"] as const).map((status) => (
+                <button key={status} onClick={() => setGoalFilter(status)}
+                  className={`px-3 py-1.5 font-sans text-xs rounded-md transition-colors ${
+                    goalFilter === status ? "bg-paper text-ink shadow-sm" : "text-ink-muted hover:text-ink"
+                  }`}>
+                  {status === "all" ? "All" : goalStatusLabels[status]}
+                  <span className="ml-1 opacity-50">({status === "all" ? goals.length : goals.filter(g => g.status === status).length})</span>
+                </button>
+              ))}
+            </div>
+            
+            <div className="space-y-3">
+              {filteredGoals.map((goal) => (
+                <div key={goal.id} className={`px-4 py-4 rounded-lg group transition-colors ${
+                  goal.status === 'active' ? "bg-ink/[0.04]" : "bg-ink/[0.02]"
+                }`}>
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`px-2 py-0.5 font-sans text-xs rounded ${
+                          goal.status === 'active' ? "bg-blue-100 text-blue-700" :
+                          goal.status === 'completed' ? "bg-green-100 text-green-700" :
+                          "bg-red-100 text-red-700"
+                        }`}>{goalStatusLabels[goal.status]}</span>
+                      </div>
+                      <h3 className={`font-medium text-sm ${goal.status !== 'active' ? "text-ink-muted" : ""}`}>{goal.title}</h3>
+                      {goal.description && <p className="mt-1 font-sans text-xs text-ink-muted">{goal.description}</p>}
+                      
+                      {goal.status === 'completed' && goal.completed_at && (
+                        <p className="mt-2 font-sans text-xs text-green-600">
+                          ✓ Completed on {new Date(goal.completed_at).toLocaleDateString()}
+                        </p>
+                      )}
+                      
+                      {goal.status === 'ditched' && goal.ditch_reason && (
+                        <div className="mt-2 p-2 bg-red-50 rounded">
+                          <p className="font-sans text-xs text-red-600">Reason: {goal.ditch_reason}</p>
+                        </div>
+                      )}
+
+                      {editingGoal === goal.id && (
+                        <div className="mt-3 space-y-2">
+                          <input type="text" value={ditchReasonInput} onChange={(e) => setDitchReasonInput(e.target.value)}
+                            placeholder="Why are you ditching this goal?" autoFocus
+                            className="w-full px-3 py-2 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
+                          <div className="flex gap-2">
+                            <button onClick={() => ditchGoal(goal.id)} className="px-3 py-1.5 bg-red-500 text-white rounded font-sans text-xs hover:bg-red-600 transition-colors">Ditch</button>
+                            <button onClick={() => { setEditingGoal(null); setDitchReasonInput("") }} className="px-3 py-1.5 font-sans text-xs text-ink-muted hover:text-ink transition-colors">Cancel</button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex flex-col gap-1 shrink-0">
+                      {goal.status === 'active' && editingGoal !== goal.id && (
+                        <>
+                          <button onClick={() => completeGoal(goal.id)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-green-600 hover:text-green-700 transition-all">Complete</button>
+                          <button onClick={() => setEditingGoal(goal.id)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all">Ditch</button>
+                        </>
+                      )}
+                      {goal.status !== 'active' && (
+                        <button onClick={() => reactivateGoal(goal.id)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-blue-600 hover:text-blue-700 transition-all">Reactivate</button>
+                      )}
+                      <button onClick={() => deleteGoal(goal.id)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all">×</button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {filteredGoals.length === 0 && <p className="text-center py-12 text-ink-muted font-sans text-sm">No {goalFilter !== 'all' ? goalFilter : ''} goals yet</p>}
             </div>
           </div>
         )}
@@ -444,66 +469,32 @@ export default function DumpPage() {
         {activeTab === "clipboard" && (
           <div className="space-y-4">
             <form onSubmit={addClipboard} className="space-y-2">
-              <input
-                type="text"
-                value={newClipboard.content}
-                onChange={(e) => setNewClipboard({ ...newClipboard, content: e.target.value })}
-                placeholder="Paste anything..."
-                className="w-full px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted"
-              />
+              <input type="text" value={newClipboard.content} onChange={(e) => setNewClipboard({ ...newClipboard, content: e.target.value })}
+                placeholder="Paste anything..." className="w-full px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
               <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newClipboard.label}
-                  onChange={(e) => setNewClipboard({ ...newClipboard, label: e.target.value })}
-                  placeholder="Label (optional)..."
-                  className="flex-1 px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted"
-                />
-                <button
-                  type="submit"
-                  className="px-4 py-2.5 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors"
-                >
-                  Save
-                </button>
+                <input type="text" value={newClipboard.label} onChange={(e) => setNewClipboard({ ...newClipboard, label: e.target.value })}
+                  placeholder="Label (optional)..." className="flex-1 px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
+                <button type="submit" className="px-4 py-2.5 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors">Save</button>
               </div>
             </form>
             
             <div className="space-y-2">
               {clipboard.map((item) => (
-                <div
-                  key={item.id}
-                  className="px-4 py-3 bg-ink/[0.02] rounded-lg group hover:bg-ink/[0.04] transition-colors"
-                >
+                <div key={item.id} className="px-4 py-3 bg-ink/[0.02] rounded-lg group hover:bg-ink/[0.04] transition-colors">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
-                      {item.label && (
-                        <p className="font-sans text-xs text-ink-muted mb-1">{item.label}</p>
-                      )}
+                      {item.label && <p className="font-sans text-xs text-ink-muted mb-1">{item.label}</p>}
                       <p className="font-mono text-sm break-all">{item.content}</p>
                     </div>
                     <div className="flex gap-2 shrink-0">
-                      <button
-                        onClick={() => copyToClipboard(item.content)}
-                        className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-ink transition-all"
-                      >
-                        Copy
-                      </button>
-                      <button
-                        onClick={() => deleteClipboard(item.id)}
-                        className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all"
-                      >
-                        ×
-                      </button>
+                      <button onClick={() => copyToClipboard(item.content)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-ink transition-all">Copy</button>
+                      <button onClick={() => deleteClipboard(item.id)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all">×</button>
                     </div>
                   </div>
-                  <p className="mt-2 font-sans text-xs text-ink-muted">
-                    {new Date(item.created_at).toLocaleDateString()}
-                  </p>
+                  <p className="mt-2 font-sans text-xs text-ink-muted">{new Date(item.created_at).toLocaleDateString()}</p>
                 </div>
               ))}
-              {clipboard.length === 0 && (
-                <p className="text-center py-12 text-ink-muted font-sans text-sm">Nothing saved yet</p>
-              )}
+              {clipboard.length === 0 && <p className="text-center py-12 text-ink-muted font-sans text-sm">Nothing saved yet</p>}
             </div>
           </div>
         )}
@@ -511,84 +502,51 @@ export default function DumpPage() {
         {/* Papers Tab */}
         {activeTab === "papers" && (
           <div className="space-y-4">
-            {/* Add paper form */}
-            <form onSubmit={addPaper} className="flex gap-2">
-              <input
-                type="url"
-                value={newPaperUrl}
-                onChange={(e) => setNewPaperUrl(e.target.value)}
-                placeholder="Paper URL (arXiv, Semantic Scholar, DOI)..."
-                className="flex-1 px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted"
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-4 py-2.5 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors disabled:opacity-50"
-              >
-                {loading ? "..." : "Add"}
-              </button>
+            <form onSubmit={addPaper} className="space-y-2">
+              <input type="text" value={newPaper.title} onChange={(e) => setNewPaper({ ...newPaper, title: e.target.value })}
+                placeholder="Paper title (optional if URL provided)..." className="w-full px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
+              <div className="flex gap-2">
+                <input type="text" value={newPaper.url} onChange={(e) => setNewPaper({ ...newPaper, url: e.target.value })}
+                  placeholder="Paper URL (arXiv, etc. - auto-fetches metadata)..." className="flex-1 px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
+                <button type="submit" disabled={loading} className="px-4 py-2.5 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors disabled:opacity-50">
+                  {loading ? "..." : "Add"}
+                </button>
+              </div>
             </form>
 
-            {/* Filter */}
             <div className="flex gap-1 p-1 bg-ink/5 rounded-lg w-fit">
               {(["all", "to_read", "reading", "read"] as const).map((status) => (
-                <button
-                  key={status}
-                  onClick={() => setPaperFilter(status)}
+                <button key={status} onClick={() => setPaperFilter(status)}
                   className={`px-3 py-1.5 font-sans text-xs rounded-md transition-colors ${
-                    paperFilter === status
-                      ? "bg-paper text-ink shadow-sm"
-                      : "text-ink-muted hover:text-ink"
-                  }`}
-                >
+                    paperFilter === status ? "bg-paper text-ink shadow-sm" : "text-ink-muted hover:text-ink"
+                  }`}>
                   {status === "all" ? "All" : statusLabels[status]}
-                  <span className="ml-1 opacity-50">
-                    ({status === "all" ? papers.length : papers.filter(p => p.status === status).length})
-                  </span>
+                  <span className="ml-1 opacity-50">({status === "all" ? papers.length : papers.filter(p => p.status === status).length})</span>
                 </button>
               ))}
             </div>
             
-            {/* Paper list */}
             <div className="space-y-3">
               {filteredPapers.map((paper) => (
-                <div
-                  key={paper.id}
-                  className="px-4 py-4 bg-ink/[0.02] rounded-lg group hover:bg-ink/[0.04] transition-colors"
-                >
+                <div key={paper.id} className="px-4 py-4 bg-ink/[0.02] rounded-lg group hover:bg-ink/[0.04] transition-colors">
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <select
-                          value={paper.status}
-                          onChange={(e) => updatePaperStatus(paper.id, e.target.value as PaperStatus)}
-                          className="px-2 py-0.5 bg-ink/5 border-0 rounded font-sans text-xs focus:outline-none"
-                        >
-                          <option value="to_read">To Read</option>
-                          <option value="reading">Reading</option>
-                          <option value="read">Read</option>
+                        <select value={paper.status} onChange={(e) => updatePaperStatus(paper.id, e.target.value as PaperStatus)}
+                          className="px-2 py-0.5 bg-ink/5 border-0 rounded font-sans text-xs focus:outline-none">
+                          <option value="to_read">To Read</option><option value="reading">Reading</option><option value="read">Read</option>
                         </select>
                       </div>
-                      <a
-                        href={paper.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-sm hover:text-ink-light transition-colors line-clamp-2"
-                      >
-                        {paper.title || paper.url}
-                      </a>
-                      {paper.authors && (
-                        <p className="mt-1 font-sans text-xs text-ink-muted line-clamp-1">
-                          {paper.authors}
-                        </p>
+                      {paper.url ? (
+                        <a href={paper.url} target="_blank" rel="noopener noreferrer" className="font-medium text-sm hover:text-ink-light transition-colors line-clamp-2">
+                          {paper.title || paper.url}
+                        </a>
+                      ) : (
+                        <p className="font-medium text-sm">{paper.title}</p>
                       )}
-                      {paper.abstract && (
-                        <p className="mt-2 font-sans text-xs text-ink-light line-clamp-3">
-                          {paper.abstract}
-                        </p>
-                      )}
+                      {paper.authors && <p className="mt-1 font-sans text-xs text-ink-muted line-clamp-1">{paper.authors}</p>}
+                      {paper.abstract && <p className="mt-2 font-sans text-xs text-ink-light line-clamp-3">{paper.abstract}</p>}
                       
-                      {/* Outcome section */}
                       {paper.status === "read" && paper.outcome && (
                         <div className="mt-3 p-3 bg-ink/5 rounded-md">
                           <p className="font-sans text-xs text-ink-muted mb-1">Outcome / Notes:</p>
@@ -596,68 +554,32 @@ export default function DumpPage() {
                         </div>
                       )}
                       
-                      {/* Edit outcome */}
                       {editingPaper === paper.id && (
                         <div className="mt-3 space-y-2">
-                          <textarea
-                            value={outcomeInput}
-                            onChange={(e) => setOutcomeInput(e.target.value)}
-                            placeholder="What did you learn? Key takeaways..."
-                            className="w-full px-3 py-2 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted resize-none"
-                            rows={3}
-                            autoFocus
-                          />
+                          <textarea value={outcomeInput} onChange={(e) => setOutcomeInput(e.target.value)}
+                            placeholder="What did you learn? Key takeaways..." rows={3} autoFocus
+                            className="w-full px-3 py-2 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted resize-none" />
                           <div className="flex gap-2">
-                            <button
-                              onClick={() => savePaperOutcome(paper.id)}
-                              className="px-3 py-1.5 bg-ink text-paper rounded font-sans text-xs hover:bg-ink-light transition-colors"
-                            >
-                              Save
-                            </button>
-                            <button
-                              onClick={() => { setEditingPaper(null); setOutcomeInput("") }}
-                              className="px-3 py-1.5 font-sans text-xs text-ink-muted hover:text-ink transition-colors"
-                            >
-                              Cancel
-                            </button>
+                            <button onClick={() => savePaperOutcome(paper.id)} className="px-3 py-1.5 bg-ink text-paper rounded font-sans text-xs hover:bg-ink-light transition-colors">Save</button>
+                            <button onClick={() => { setEditingPaper(null); setOutcomeInput("") }} className="px-3 py-1.5 font-sans text-xs text-ink-muted hover:text-ink transition-colors">Cancel</button>
                           </div>
                         </div>
                       )}
                     </div>
                     
                     <div className="flex flex-col gap-1 shrink-0">
-                      {!paper.title && (
-                        <button
-                          onClick={() => refetchMetadata(paper)}
-                          disabled={loading}
-                          className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-ink transition-all"
-                        >
-                          Fetch
-                        </button>
+                      {paper.url && !paper.authors && (
+                        <button onClick={() => refetchMetadata(paper)} disabled={loading} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-ink transition-all">Fetch</button>
                       )}
                       {editingPaper !== paper.id && (
-                        <button
-                          onClick={() => { setEditingPaper(paper.id); setOutcomeInput(paper.outcome || "") }}
-                          className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-ink transition-all"
-                        >
-                          Note
-                        </button>
+                        <button onClick={() => { setEditingPaper(paper.id); setOutcomeInput(paper.outcome || "") }} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-ink transition-all">Note</button>
                       )}
-                      <button
-                        onClick={() => deletePaper(paper.id)}
-                        className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all"
-                      >
-                        ×
-                      </button>
+                      <button onClick={() => deletePaper(paper.id)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all">×</button>
                     </div>
                   </div>
                 </div>
               ))}
-              {filteredPapers.length === 0 && (
-                <p className="text-center py-12 text-ink-muted font-sans text-sm">
-                  {paperFilter === "all" ? "No papers saved yet" : `No ${statusLabels[paperFilter as PaperStatus].toLowerCase()} papers`}
-                </p>
-              )}
+              {filteredPapers.length === 0 && <p className="text-center py-12 text-ink-muted font-sans text-sm">{paperFilter === "all" ? "No papers saved yet" : `No ${statusLabels[paperFilter as PaperStatus].toLowerCase()} papers`}</p>}
             </div>
           </div>
         )}
@@ -666,92 +588,42 @@ export default function DumpPage() {
         {activeTab === "emails" && (
           <div className="space-y-4">
             <form onSubmit={addEmail} className="space-y-2">
-              <input
-                type="text"
-                value={newEmail.subject}
-                onChange={(e) => setNewEmail({ ...newEmail, subject: e.target.value })}
-                placeholder="Who to email..."
-                className="w-full px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted"
-              />
+              <input type="text" value={newEmail.subject} onChange={(e) => setNewEmail({ ...newEmail, subject: e.target.value })}
+                placeholder="Who to email..." className="w-full px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
               <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newEmail.reason}
-                  onChange={(e) => setNewEmail({ ...newEmail, reason: e.target.value })}
-                  placeholder="Why you need to email them..."
-                  className="flex-1 px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted"
-                />
-                <select
-                  value={newEmail.priority}
-                  onChange={(e) => setNewEmail({ ...newEmail, priority: e.target.value as EmailNote["priority"] })}
-                  className="px-3 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-xs focus:outline-none focus:border-ink/40"
-                >
-                  <option value="low">Low</option>
-                  <option value="medium">Med</option>
-                  <option value="high">High</option>
+                <input type="text" value={newEmail.reason} onChange={(e) => setNewEmail({ ...newEmail, reason: e.target.value })}
+                  placeholder="Why you need to email them..." className="flex-1 px-4 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-sm focus:outline-none focus:border-ink/40 placeholder:text-ink-muted" />
+                <select value={newEmail.priority} onChange={(e) => setNewEmail({ ...newEmail, priority: e.target.value as EmailNote["priority"] })}
+                  className="px-3 py-2.5 bg-transparent border border-ink/20 rounded-lg font-sans text-xs focus:outline-none">
+                  <option value="low">Low</option><option value="medium">Med</option><option value="high">High</option>
                 </select>
-                <button
-                  type="submit"
-                  className="px-4 py-2.5 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors"
-                >
-                  Add
-                </button>
+                <button type="submit" className="px-4 py-2.5 bg-ink text-paper rounded-lg font-sans text-sm hover:bg-ink-light transition-colors">Add</button>
               </div>
             </form>
             
             <div className="space-y-2">
-              {emails
-                .sort((a, b) => {
-                  if (a.done !== b.done) return a.done ? 1 : -1
-                  const priorityOrder = { high: 0, medium: 1, low: 2 }
-                  return priorityOrder[a.priority] - priorityOrder[b.priority]
-                })
-                .map((email) => (
-                <div
-                  key={email.id}
-                  className={`px-4 py-3 rounded-lg group transition-colors ${
-                    email.done ? "bg-ink/[0.02]" : "bg-ink/[0.04]"
-                  }`}
-                >
+              {emails.sort((a, b) => {
+                if (a.done !== b.done) return a.done ? 1 : -1
+                return { high: 0, medium: 1, low: 2 }[a.priority] - { high: 0, medium: 1, low: 2 }[b.priority]
+              }).map((email) => (
+                <div key={email.id} className={`px-4 py-3 rounded-lg group transition-colors ${email.done ? "bg-ink/[0.02]" : "bg-ink/[0.04]"}`}>
                   <div className="flex items-start gap-3">
-                    <button
-                      onClick={() => toggleEmail(email.id, email.done)}
+                    <button onClick={() => toggleEmail(email.id, email.done)}
                       className={`w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
-                        email.done
-                          ? "bg-ink border-ink text-paper"
-                          : "border-ink/30 hover:border-ink/50"
-                      }`}
-                    >
-                      {email.done && <span className="text-xs">✓</span>}
-                    </button>
+                        email.done ? "bg-ink border-ink text-paper" : "border-ink/30 hover:border-ink/50"
+                      }`}>{email.done && <span className="text-xs">✓</span>}</button>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <p className={`font-sans text-sm font-medium ${email.done ? "line-through text-ink-muted" : ""}`}>
-                          {email.subject}
-                        </p>
-                        <span className={`font-sans text-xs ${priorityColors[email.priority]}`}>
-                          {email.priority === "high" && "●"}
-                          {email.priority === "medium" && "○"}
-                        </span>
+                        <p className={`font-sans text-sm font-medium ${email.done ? "line-through text-ink-muted" : ""}`}>{email.subject}</p>
+                        <span className={`font-sans text-xs ${priorityColors[email.priority]}`}>{email.priority === "high" ? "●" : email.priority === "medium" ? "○" : ""}</span>
                       </div>
-                      {email.reason && (
-                        <p className={`mt-1 font-sans text-xs ${email.done ? "text-ink-muted/50" : "text-ink-muted"}`}>
-                          {email.reason}
-                        </p>
-                      )}
+                      {email.reason && <p className={`mt-1 font-sans text-xs ${email.done ? "text-ink-muted/50" : "text-ink-muted"}`}>{email.reason}</p>}
                     </div>
-                    <button
-                      onClick={() => deleteEmail(email.id)}
-                      className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all"
-                    >
-                      ×
-                    </button>
+                    <button onClick={() => deleteEmail(email.id)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-red-500 transition-all">×</button>
                   </div>
                 </div>
               ))}
-              {emails.length === 0 && (
-                <p className="text-center py-12 text-ink-muted font-sans text-sm">No email reminders yet</p>
-              )}
+              {emails.length === 0 && <p className="text-center py-12 text-ink-muted font-sans text-sm">No email reminders yet</p>}
             </div>
           </div>
         )}

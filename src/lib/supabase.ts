@@ -44,6 +44,18 @@ export interface EmailNote {
   created_at: string
 }
 
+export type GoalStatus = 'active' | 'completed' | 'ditched'
+
+export interface Goal {
+  id: string
+  title: string
+  description: string | null
+  status: GoalStatus
+  ditch_reason: string | null
+  completed_at: string | null
+  created_at: string
+}
+
 // Helper to get today's date string
 export const getTodayString = () => {
   return new Date().toISOString().split('T')[0]
