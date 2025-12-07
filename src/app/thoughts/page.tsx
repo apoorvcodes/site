@@ -35,7 +35,7 @@ export default function ThoughtsPage() {
 
         <h1 className="mt-8 text-4xl font-medium tracking-tight">Thoughts</h1>
         <p className="mt-4 text-ink-light prose-body">
-          Personal reflections, ideas, and things I'm thinking about.
+          Personal reflections, ideas, and things I&apos;m thinking about.
         </p>
 
         <div className="mt-12 space-y-10">
