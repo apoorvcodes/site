@@ -139,49 +139,23 @@ export default function DumpPage() {
     navigator.clipboard.writeText(content)
   }
 
-  // Paper functions with metadata fetch
+  // Paper functions with metadata fetch (via server API to avoid CORS)
   const fetchPaperMetadata = async (url: string) => {
-    let metadata = { title: null as string | null, authors: null as string | null, abstract: null as string | null }
-    
-    // arXiv
-    if (url.includes("arxiv.org")) {
-      try {
-        const arxivId = url.match(/(\d{4}\.\d{4,5})/)?.[1]
-        if (arxivId) {
-          const res = await fetch(`https://export.arxiv.org/api/query?id_list=${arxivId}`)
-          const text = await res.text()
-          const parser = new DOMParser()
-          const xml = parser.parseFromString(text, "text/xml")
-          const entry = xml.querySelector("entry")
-          if (entry) {
-            metadata.title = entry.querySelector("title")?.textContent?.trim().replace(/\s+/g, ' ') || null
-            metadata.authors = Array.from(entry.querySelectorAll("author name"))
-              .map(n => n.textContent)
-              .join(", ") || null
-            metadata.abstract = entry.querySelector("summary")?.textContent?.trim().replace(/\s+/g, ' ') || null
-          }
-        }
-      } catch (err) {
-        console.error("Failed to fetch arXiv metadata:", err)
+    try {
+      const res = await fetch("/api/paper-metadata", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      })
+      
+      if (res.ok) {
+        return await res.json()
       }
+    } catch (err) {
+      console.error("Failed to fetch metadata:", err)
     }
     
-    // Semantic Scholar (for other URLs)
-    if (!metadata.title && (url.includes("semanticscholar") || url.includes("doi.org"))) {
-      try {
-        const res = await fetch(`https://api.semanticscholar.org/v1/paper/${encodeURIComponent(url)}`)
-        if (res.ok) {
-          const data = await res.json()
-          metadata.title = data.title || null
-          metadata.authors = data.authors?.map((a: { name: string }) => a.name).join(", ") || null
-          metadata.abstract = data.abstract || null
-        }
-      } catch (err) {
-        console.error("Failed to fetch Semantic Scholar metadata:", err)
-      }
-    }
-    
-    return metadata
+    return { title: null, authors: null, abstract: null }
   }
 
   const addPaper = async (e: React.FormEvent) => {
