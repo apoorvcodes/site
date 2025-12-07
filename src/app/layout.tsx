@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     title: "Apoorv Singh (@apoorvcodes) — AI Researcher & Engineer",
     description: "19-year-old AI researcher who trains models and builds pipelines. Co-built Luna, a SOTA speech-to-speech model at Pixa AI.",
     images: [{
-      url: "/og.png",
+      url: `${BASE_URL}/og.png`,
       width: 1200,
       height: 630,
       alt: "Apoorv Singh (apoorvcodes) — AI Researcher",
@@ -75,10 +75,10 @@ export const metadata: Metadata = {
     creator: "@apoorvcodes",
     title: "Apoorv Singh (@apoorvcodes)",
     description: "AI researcher who trains models and builds pipelines. Co-built Luna at Pixa AI.",
-    images: {
-      url: "/og.png",
+    images: [{
+      url: `${BASE_URL}/og.png`,
       alt: "Apoorv Singh (apoorvcodes) — AI Researcher",
-    },
+    }],
   },
   
   // App configuration
