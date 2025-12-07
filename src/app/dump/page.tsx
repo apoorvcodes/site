@@ -258,7 +258,7 @@ export default function DumpPage() {
   }
 
   // Get unique dates from tasks
-  const taskDates = [...new Set(tasks.map(t => t.date))].sort().reverse()
+  const taskDates = Array.from(new Set(tasks.map(t => t.date))).sort().reverse()
   const tasksForSelectedDate = tasks.filter(t => t.date === selectedDate)
 
   // Filter papers
