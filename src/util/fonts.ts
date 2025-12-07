@@ -1,8 +1,15 @@
-import { Montserrat } from "next/font/google"
+import { Source_Serif_4, Inter } from "next/font/google"
 
-const inter = Montserrat({
+const sourceSerif = Source_Serif_4({
   subsets: ["latin"],
-  variable: "--font-montserrat",
+  variable: "--font-serif",
+  display: "swap",
 })
 
-export { inter }
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+})
+
+export { sourceSerif, inter }

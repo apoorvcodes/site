@@ -1,38 +1,10 @@
-import { BsDiscord, BsGithub, BsLinkedin, BsTwitter } from "react-icons/bs"
-import { MdEmail } from "react-icons/md"
-
-import { REPOSITORY_LINK, SOCIAL_LINKS } from "@/util"
-import ExternalLink from "@/components/ExternalLink"
-
-const { Discord, Email, GitHub, Linkedin, Twitter } = SOCIAL_LINKS
-
 export default function Footer() {
   return (
-    <footer className="flex h-[70px] w-full items-center justify-center border-t border-gray-200 px-5 dark:border-gray-200/5 xl:px-0">
-      <div className="flex w-full max-w-[850px] items-center justify-between text-sm text-gray-700 dark:text-gray-400">
-        <section className="flex">
-          <h1 className="text-md font-semibold">
-            Apoorv Singh &mdash; <ExternalLink href={REPOSITORY_LINK}>Source Code</ExternalLink>
-          </h1>
-        </section>
-
-        <section className="flex space-x-2 text-lg">
-          <ExternalLink href={Discord} title="Discord">
-            <BsDiscord size={24} />
-          </ExternalLink>
-          <ExternalLink href={Email} title="Email">
-            <MdEmail size={24} />
-          </ExternalLink>
-          <ExternalLink href={GitHub} title="GitHub">
-            <BsGithub size={24} />
-          </ExternalLink>
-          <ExternalLink href={Linkedin} title="LinkedIn">
-            <BsLinkedin size={24} />
-          </ExternalLink>
-          <ExternalLink href={Twitter} title="Twitter">
-            <BsTwitter size={24} />
-          </ExternalLink>
-        </section>
+    <footer className="py-12 px-6 md:px-8 border-t border-ink/5">
+      <div className="max-w-2xl mx-auto">
+        <p className="font-sans text-xs text-ink-muted">
+          © {new Date().getFullYear()} Apoorv Singh
+        </p>
       </div>
     </footer>
   )

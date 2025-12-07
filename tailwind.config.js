@@ -8,9 +8,22 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        "light-gray": "#bebebe",
-        "midnight-violet": "#1c1b22",
-        "pink": "#e4717a",
+        "paper": "#fafaf9",
+        "ink": "#1a1a1a",
+        "ink-light": "#525252",
+        "ink-muted": "#737373",
+        "accent": "#171717",
+      },
+      fontFamily: {
+        serif: ["var(--font-serif)", "Georgia", "serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: '65ch',
+          },
+        },
       },
     },
   },

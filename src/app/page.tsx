@@ -1,125 +1,165 @@
 import Image from "next/image"
-import { motion } from "framer-motion"
-
-import { calculateAge } from "@/util"
-import CurrentTime from "@/components/CurrentTime"
-import DiscordStatus from "@/components/DiscordStatus"
+import Link from "next/link"
 import ExternalLink from "@/components/ExternalLink"
+import SpotifyNowPlaying from "@/components/SpotifyNowPlaying"
 import profilePicture from "../../public/logo.jpeg"
 
 export default function Page() {
   return (
-    <main className="flex min-h-full w-full grow content-stretch p-2 md:p-5">
-      <div className="flex grow flex-col items-center justify-center space-y-10 overflow-hidden bg-fixed bg-center p-5 md:p-0">
-        <div className="flex w-full max-w-[750px] flex-col gap-y-3 rounded-lg">
-          <div className="flex items-center gap-x-1">
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <header className="pt-20 pb-12 px-6 md:px-8">
+        <div className="max-w-2xl mx-auto">
+          <div className="fade-in stagger-1">
             <Image
-              alt="Profile Picture"
-              className="h-[70px] w-[70px] rounded-full bg-cover transition-transform duration-300 hover:scale-105 md:h-[80px] md:w-[80px] lg:h-[100px] lg:w-[100px]"
+              alt="Apoorv Singh"
+              className="w-20 h-20 rounded-full grayscale hover:grayscale-0 transition-all duration-500"
               priority
               src={profilePicture}
             />
           </div>
 
-          <section className="w-full">
-            <aside className="flex items-center gap-x-1 rounded-xl text-sm dark:text-gray-400">
-              <DiscordStatus />
-              &mdash;
-              <CurrentTime />
-            </aside>
-            <h1 className="text-4xl font-bold pt-1">Apoorv Singh</h1>
-          </section>
+          <h1 className="mt-8 text-4xl md:text-5xl font-medium tracking-tight fade-in stagger-2">
+            Apoorv Singh
+          </h1>
+          
+          <p className="mt-4 text-xl text-ink-light fade-in stagger-3">
+            I like to train models and build concise pipelines.
+          </p>
+          
+          <p className="mt-2 text-ink-muted font-sans text-sm fade-in stagger-3">
+            19 · Bangalore, India
+          </p>
+          
+          <div className="mt-4 fade-in stagger-4">
+            <SpotifyNowPlaying />
+          </div>
+
+          <nav className="mt-6 flex gap-4 text-sm fade-in stagger-4">
+            <Link 
+              href="/thoughts" 
+              className="text-ink font-medium underline underline-offset-4 hover:text-ink-muted transition-colors"
+            >
+              Thoughts
+            </Link>
+            <Link 
+              href="/reports" 
+              className="text-ink font-medium underline underline-offset-4 hover:text-ink-muted transition-colors"
+            >
+              Reports
+            </Link>
+          </nav>
         </div>
+      </header>
 
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
-            Who am I?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
-          </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Hey! I am Apoorv, an 18-year-old developer and researcher. I was born in a small town called Varanasi but now I&apos;ve shifted to Bangalore. I decided to skip college and focus on building cool stuff instead. I&apos;m super into AI and love tinkering with backend systems. Right now I am now planning to move to San Francisco by the end of this year - pretty excited about that!
-          </span>
-        </section>
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
-            What I love?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
-          </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            A bit about me is that I love watching football - I&apos;m a huge Barça fan (PS: hope we win CL this year lol). I also love watching anime, 
-            especially seinen ones. My absolute favorites are{" "}
-            <ExternalLink href="https://www.imdb.com/title/tt7984734/">Made in Abyss</ExternalLink> and{" "}
-            <ExternalLink href="https://www.imdb.com/title/tt10233448/">Vinland Saga</ExternalLink>.
-          </span>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            As for my passions, I absolutely love LLMs, transformers and hardware. Back in school, I spent most of my time bunking classes 
-            and building stuff in the labs (I was pretty damn good at it too!). You can check out some of my hardware projects on my{" "}
-            <ExternalLink href="https://github.com/apoorvcodes">Github Profile</ExternalLink>.
-          </span>
-        </section>
-
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
-            What have I done?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
-          </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            The first thing I built was an NLP-based COVID tracking bot for spreading awareness on Discord. It went viral at its peak—I handled 500K+ users, and the bot was also verified on Discord. (I was just 14, had to use my dad&apos;s ID.) I reverse-engineered Discord for hosting self-bots (got three IDs banned), then went on to learn Golang.
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            I built a framework like Express but around 50x faster for personal use—got over 150 stars organically. As per my knowledge, around five companies use it right now, including major projects my institute maintains. Moved to crypto for the fun of it, came top 5 in my first hackathon (biggest multichain hackathon at the time), was a core member in Saturn. We received a $50K grant from Sandeep Nailwal (didn&apos;t work out well).
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Did hackathons in between, won around five premier hacks, wrote a couple of compilers here and there. In total, I&apos;ve received over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR">$65K</ExternalLink> in grants and prizes.
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            This was my first phase of life.
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            In my senior years, I did a lot of huge science fairs. I&apos;m still the only kid to podium in both <ExternalLink href="https://youthideathon.in">Youth Ideathon</ExternalLink> (Won in &apos;22) and the <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">CBSE Science Exhibition</ExternalLink> (Podium &apos;22).
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            When I was 17, I was offered the <ExternalLink href="https://www.symbolic.capital/fellowship">Nailwal Fellowship</ExternalLink> ($50K in total) but decided not to take it. Apart from this, I came 2nd in the biggest multichain hackathon (<ExternalLink href="https://unfold.devfolio.co">Unfold &apos;23</ExternalLink>)—once again, the youngest winner.
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Later, I moved out of crypto and focused on AI and human interfaces as a whole. I built <ExternalLink href="https://heyconn.ai">Connect AI</ExternalLink>—a Jarvis-like human-computer interface that could convert thoughts into action and perform tasks like a human. We went viral on Twitter—500K views in a day—top founders and VCs approaching for investment. Couldn&apos;t translate well as a business, so I moved away from it. (Some sneak peeks for later—I&apos;m gonna reuse it at the end of the year for something even bigger.)
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            I also wrote the AI pipeline and benchmarks for kids&apos; AI at <ExternalLink href="https://heypixа.ai">HeyPixa.ai</ExternalLink>—just for fun. Pixa is gonna be in UK stores by the end of the year.
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Then I built a Zapier-like service but for browser agents—in a week—for WTFund. Went till finals. Got rejected &apos;cause I was too early.
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Now, I&apos;ve co-founded a research lab with a couple of my friends from IITs, and we&apos;re soon gonna release our first research!
-          </span>
-        </section>
-
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
-            Plans and Future?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
-          </h1>
+      {/* Main Content */}
+      <article className="px-6 md:px-8 pb-24">
+        <div className="max-w-2xl mx-auto">
           
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Currently conducting voice-to-voice research at my AI lab and building a prompt editor for in-house usage. Long-term, I have major plans for human-computer interfaces, particularly in hardware, scheduled for the end of the year—something that will revolutionize human interactions forever!
-          </span>
-          
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            If you&apos;re an engineer interested in working with the lab or on the HCI project, feel free to email or DM me.
-          </span>
+          {/* What I've Worked On */}
+          <section className="fade-in stagger-4">
+            <h2 className="font-sans text-xs uppercase tracking-[0.2em] text-ink-muted mb-8">
+              What I've Worked On
+            </h2>
+            
+            <div className="space-y-6 prose-body text-ink-light">
+              <p>
+                Most recently I was at <ExternalLink href="https://heypixa.ai">Pixa AI</ExternalLink> as 
+                a Founding Engineer and Researcher. Co-built <span className="text-ink font-medium">Luna</span>, 
+                a <span className="text-ink font-medium">speech-to-speech model</span> that 
+                understands meaning not just words. Also worked on <span className="text-ink font-medium">neural audio codecs</span> and 
+                an <span className="text-ink font-medium">ASR</span> for how Indians actually speak, 
+                code-switching between Hindi and English. Built the data pipelines to make it all happen.
+              </p>
+
+              <p>
+                Now exploring <span className="text-ink font-medium">agentic search</span> and{" "}
+                <span className="text-ink font-medium">RL environments</span> for niche dataset creation.
+              </p>
+            </div>
+          </section>
+
+          {/* Background Section */}
+          <section className="mt-16 fade-in stagger-5">
+            <h2 className="font-sans text-xs uppercase tracking-[0.2em] text-ink-muted mb-8">
+              Before This
+            </h2>
+            
+            <div className="space-y-6 prose-body text-ink-light">
+              <p>
+                I first started exploring AI with something called <span className="text-ink font-medium">Mindify</span>, 
+                an edtech agent designed for low income families who couldn't afford traditional private tuition. 
+                I was invited to present this at the{" "}
+                <ExternalLink href="https://www.indiamobilecongress.com">India Mobile Congress</ExternalLink> to 
+                Mr. Ashwini Vaishnaw and our honourable Prime Minister.
+              </p>
+
+              <p>
+                I skipped the traditional path. At 14, I built an <span className="text-ink font-medium">NLP-based</span> COVID 
+                tracking bot for <ExternalLink href="https://discord.com">Discord</ExternalLink> that went viral and 
+                served <span className="text-ink font-medium">500K+ users</span>. Got the bot verified on Discord too 
+                (had to use my dad's ID since I was underage). Reverse-engineered Discord for hosting self-bots, 
+                got three IDs banned in the process, then moved on to learn{" "}
+                <ExternalLink href="https://go.dev">Golang</ExternalLink>.
+              </p>
+              
+              <p>
+                Built a <ExternalLink href="https://github.com/apoorvcodes/skaira">web framework</ExternalLink> like{" "}
+                <ExternalLink href="https://expressjs.com">Express</ExternalLink> but around{" "}
+                <span className="text-ink font-medium">50x faster</span>. Got over{" "}
+                <span className="text-ink font-medium">150 stars</span> organically and about five companies use it now. 
+                Moved to <span className="text-ink font-medium">crypto</span> for fun, came top 5 in my first hackathon.
+              </p>
+
+              <p>
+                During school, I spent most of my time skipping classes and building{" "}
+                <span className="text-ink font-medium">hardware projects</span> in the labs. That hands-on tinkering 
+                helped me win both the{" "}
+                <ExternalLink href="https://youthideathon.in">Youth Ideathon</ExternalLink> (2022) and 
+                podium at the <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">CBSE Science Exhibition</ExternalLink> (2022). 
+                Still the only person to achieve both. I later became a student evaluator for the CBSE Youth Ideathon.
+              </p>
+
+              <p>
+                I've won multiple premier hackathons, most recently{" "}
+                <ExternalLink href="https://unfold.devfolio.co">Unfold '23</ExternalLink> where I came 
+                2nd as the youngest winner. Over the years I've received grants from the Government of 
+                India, CBSE, <ExternalLink href="https://solana.com">Solana</ExternalLink>, and{" "}
+                <ExternalLink href="https://polygon.technology">Polygon</ExternalLink> for my projects.
+              </p>
+
+              <p>
+                Tried my hand at building a startup with <ExternalLink href="https://heyconn.ai">Connect AI</ExternalLink>, 
+                a <span className="text-ink font-medium">Jarvis-like interface</span> that could convert thoughts into action. 
+                Went viral on <ExternalLink href="https://twitter.com">Twitter</ExternalLink>, got reached out by{" "}
+                <ExternalLink href="https://nexusvp.com">Nexus VP</ExternalLink>,{" "}
+                <ExternalLink href="https://sierraventures.com">Sierra Ventures</ExternalLink>,{" "}
+                <ExternalLink href="https://gradientventures.com">Gradient Ventures</ExternalLink>, and{" "}
+                <ExternalLink href="https://peakxv.com">Peak XV</ExternalLink>. Even got to visit{" "}
+                <ExternalLink href="https://olacabs.com">Ola's</ExternalLink> office where they were doing 
+                human annotation, which was pretty cool. Had gaps in my knowledge when it came to business, 
+                couldn't really pull it off but got a lot of learnings.
+              </p>
+            </div>
+        </section>
+
+          {/* Contact */}
+          <section className="mt-16 pt-12 border-t border-ink/10 fade-in stagger-6">
+            <p className="prose-body text-ink-light">
+              Always open to conversations about AI research, interesting collaborations, 
+              or ambitious projects.
+            </p>
+            <p className="mt-4 text-ink-light">
+              <ExternalLink href="mailto:apoorv.conn@gmail.com">apoorv.conn@gmail.com</ExternalLink>
+              {" · "}
+              <ExternalLink href="https://twitter.com/apoorvcodes">@apoorvcodes</ExternalLink>
+              {" · "}
+              <ExternalLink href="https://github.com/apoorvcodes">GitHub</ExternalLink>
+            </p>
         </section>
 
       </div>
+      </article>
     </main>
   )
 }

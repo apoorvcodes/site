@@ -3,131 +3,205 @@ import type { Metadata } from "next"
 import type { PropsWithChildren } from "react"
 
 import "@/styles/globals.css"
-import { BASE_URL, inter } from "@/util"
+import { BASE_URL, sourceSerif, inter } from "@/util"
 import Footer from "@/components/Footer"
 
 export const metadata: Metadata = {
-  appleWebApp: {
-    title: "Apoorv Singh",
-    statusBarStyle: "black-translucent",
-  },
-  applicationName: "Apoorv Singh",
-  authors: [{ name: "Apoorv Singh", url: "https://github.com/apoorvcodes" }],
-  category: "Personal Site",
-  colorScheme: "dark",
-  creator: "Apoorv Singh",
-  description: "Personal website of Apoorv Singh - Software Developer, Researcher and Tech Enthusiast.",
-  icons: {
-    apple: [
-      "/logo.jpeg",
-      {
-        url: "/safari-pinned-tab.svg",
-        rel: "mask-icon",
-        color: "#0a0a0a" // Near black color for safari pin
-      },
-    ],
-    other: [
-      {
-        url: "/logo.jpeg",
-        sizes: "32x32",
-        type: "image/png",
-      },
-      {
-        url: "/logo.jpeg",
-        sizes: "16x16", 
-        type: "image/png",
-      },
-      {
-        url: "/logo.jpeg",
-        sizes: "192x192",
-        type: "image/png",
-      },
-      {
-        url: "/logo.jpeg",
-        sizes: "512x512",
-        type: "image/png",
-      }
-    ],
-  },
-  keywords: [
-    "apxrv",
-    "Apoorv Singh",
-    "apoorv",
-    "singh",
-    "Website",
-    "Portfolio",
-    "Projects",
-    "Developer",
-    "Software Engineer",
-    "Full Stack",
-    "Backend Developer",
-    "LLM Research"
-  ],
-  manifest: "/site.manifest",
   metadataBase: new URL(BASE_URL),
+  
+  // Core identity
+  title: {
+    default: "Apoorv Singh (@apoorvcodes) — AI Researcher & Engineer",
+    template: "%s | Apoorv Singh (@apoorvcodes)",
+  },
+  description: "Apoorv Singh (apoorvcodes) — 19-year-old AI researcher who trains models and builds pipelines. Co-built Luna, a SOTA speech-to-speech model at Pixa AI. Based in Bangalore, India.",
+  
+  // Maximize keyword coverage
+  keywords: [
+    // Name variations
+    "Apoorv Singh",
+    "apoorvcodes", 
+    "apxrv",
+    "@apoorvcodes",
+    
+    // Technical
+    "AI researcher",
+    "machine learning engineer",
+    "speech AI",
+    "Luna speech model",
+    "Pixa AI",
+    "ASR",
+    "neural audio codecs",
+    "speech-to-speech",
+    "agentic AI",
+    "RL environments",
+    
+    // Context
+    "Bangalore developer",
+    "Indian AI researcher",
+    "young AI researcher",
+    "IndiaAI mission",
+  ],
+  
+  // Authors and attribution
+  authors: [
+    { name: "Apoorv Singh", url: "https://github.com/apoorvcodes" },
+    { name: "apoorvcodes", url: "https://twitter.com/apoorvcodes" },
+  ],
+  creator: "Apoorv Singh (apoorvcodes)",
+  publisher: "Apoorv Singh",
+  
+  // OpenGraph for social sharing
   openGraph: {
-    description: "Personal website of Apoorv Singh - Software Developer, Researcher and Tech Enthusiast.",
-    siteName: "Apoorv Singh",
-    title: "Apoorv Singh | Developer & Researcher",
     type: "website",
-    url: new URL(BASE_URL),
+    locale: "en_US",
+    url: BASE_URL,
+    siteName: "Apoorv Singh — apoorvcodes",
+    title: "Apoorv Singh (@apoorvcodes) — AI Researcher & Engineer",
+    description: "19-year-old AI researcher who trains models and builds pipelines. Co-built Luna, a SOTA speech-to-speech model at Pixa AI.",
     images: [{
-      url: "/logo.jpeg",
+      url: "/og.png",
       width: 1200,
       height: 630,
-      alt: "Apoorv Singh"
-    }]
+      alt: "Apoorv Singh (apoorvcodes) — AI Researcher",
+      type: "image/png",
+    }],
   },
+  
+  // Twitter Card
   twitter: {
     card: "summary_large_image",
-    creator: "@apoorv_codes",
-    description: "Personal website of Apoorv Singh - Software Developer, Researcher and Tech Enthusiast.",
-    images: ["/logo.jpeg"],
-    title: "Apoorv Singh | Developer & Researcher"
-  },
-  other: {
-    "msapplication-TileColor": "#0a0a0a",
-    "msapplication-config": "/browserconfig.xml",
-  },
-  themeColor: [
-    { color: "#0a0a0a" },
-    {
-      media: "(prefers-color-scheme: dark)",
-      color: "#0a0a0a",
+    site: "@apoorvcodes",
+    creator: "@apoorvcodes",
+    title: "Apoorv Singh (@apoorvcodes)",
+    description: "AI researcher who trains models and builds pipelines. Co-built Luna at Pixa AI.",
+    images: {
+      url: "/og.png",
+      alt: "Apoorv Singh (apoorvcodes) — AI Researcher",
     },
+  },
+  
+  // App configuration
+  applicationName: "Apoorv Singh",
+  appleWebApp: {
+    title: "Apoorv Singh",
+    statusBarStyle: "default",
+    capable: true,
+  },
+  
+  // Indexing
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  
+  // Verification (add your IDs when you have them)
+  // verification: {
+  //   google: "your-google-verification-id",
+  // },
+  
+  // Icons
+  icons: {
+    icon: [
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+  },
+  
+  manifest: "/site.webmanifest",
+  
+  // Theme
+  themeColor: [
+    { color: "#fafaf9", media: "(prefers-color-scheme: light)" },
+    { color: "#fafaf9", media: "(prefers-color-scheme: dark)" },
   ],
-  title: {
-    default: "Apoorv Singh | Developer & Researcher",
-    template: "%s | Apoorv Singh",
+  
+  // Other meta
+  other: {
+    "msapplication-TileColor": "#fafaf9",
+    // Structured data hints for LLMs
+    "author": "Apoorv Singh",
+    "twitter:creator:id": "apoorvcodes",
   },
-  viewport: {
-    minimumScale: 1,
-    initialScale: 1,
-    width: "device-width",
-    userScalable: false
+  
+  // Alternates
+  alternates: {
+    canonical: BASE_URL,
   },
+  
+  category: "technology",
 }
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`${sourceSerif.variable} ${inter.variable}`}>
+      <head>
+        {/* JSON-LD Structured Data for LLMs and Search */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Apoorv Singh",
+              alternateName: ["apoorvcodes", "apxrv", "@apoorvcodes"],
+              url: "https://apxrv.com",
+              image: "https://apxrv.com/og.png",
+              jobTitle: "AI Researcher & Engineer",
+              worksFor: {
+                "@type": "Organization",
+                name: "Pixa AI",
+              },
+              description: "19-year-old AI researcher who trains models and builds pipelines. Co-built Luna, a SOTA speech-to-speech model.",
+              sameAs: [
+                "https://twitter.com/apoorvcodes",
+                "https://github.com/apoorvcodes",
+                "https://linkedin.com/in/apoorv-singh-344338232",
+              ],
+              knowsAbout: [
+                "Machine Learning",
+                "Speech AI",
+                "Neural Audio Codecs",
+                "ASR",
+                "Reinforcement Learning",
+                "Agentic AI",
+              ],
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Bangalore",
+                addressCountry: "India",
+              },
+            }),
+          }}
+        />
+      </head>
       <body 
-        className={`
-          ${inter.className} 
-          bg-gradient-to-br from-[#0a0a0a] via-[#0f172a] to-[#0a0a0a]
-          flex h-full min-h-screen flex-col items-center
-          text-gray-100
-          selection:bg-blue-900/20 selection:text-blue-200
+        className="
+          font-serif
+          bg-paper
+          text-ink
+          min-h-screen
           antialiased
-          scroll-smooth
-        `}
+        "
       >
-        <div className="fixed inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] pointer-events-none opacity-30" />
-        <div className="relative w-full">
-          {children}
-          <Footer />
-          <Analytics />
-        </div>
+        {children}
+        <Footer />
+        <Analytics />
       </body>
     </html>
   )
