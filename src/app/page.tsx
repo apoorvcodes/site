@@ -59,7 +59,7 @@ export default function Page() {
           {/* What I've Worked On */}
           <section className="fade-in stagger-4">
             <h2 className="font-sans text-xs uppercase tracking-[0.2em] text-ink-muted mb-8">
-              What I've Worked On
+              What I&apos;ve Worked On
             </h2>
             
             <div className="space-y-6 prose-body text-ink-light">
@@ -88,7 +88,7 @@ export default function Page() {
             <div className="space-y-6 prose-body text-ink-light">
               <p>
                 I first started exploring AI with something called <span className="text-ink font-medium">Mindify</span>, 
-                an edtech agent designed for low income families who couldn't afford traditional private tuition. 
+                an edtech agent designed for low income families who couldn&apos;t afford traditional private tuition. 
                 I was invited to present this at the{" "}
                 <ExternalLink href="https://www.indiamobilecongress.com">India Mobile Congress</ExternalLink> to 
                 Mr. Ashwini Vaishnaw and our honourable Prime Minister.
@@ -98,7 +98,7 @@ export default function Page() {
                 I skipped the traditional path. At 14, I built an <span className="text-ink font-medium">NLP-based</span> COVID 
                 tracking bot for <ExternalLink href="https://discord.com">Discord</ExternalLink> that went viral and 
                 served <span className="text-ink font-medium">500K+ users</span>. Got the bot verified on Discord too 
-                (had to use my dad's ID since I was underage). Reverse-engineered Discord for hosting self-bots, 
+                (had to use my dad&apos;s ID since I was underage). Reverse-engineered Discord for hosting self-bots, 
                 got three IDs banned in the process, then moved on to learn{" "}
                 <ExternalLink href="https://go.dev">Golang</ExternalLink>.
               </p>
@@ -121,9 +121,9 @@ export default function Page() {
               </p>
 
               <p>
-                I've won multiple premier hackathons, most recently{" "}
-                <ExternalLink href="https://unfold.devfolio.co">Unfold '23</ExternalLink> where I came 
-                2nd as the youngest winner. Over the years I've received grants from the Government of 
+                I&apos;ve won multiple premier hackathons, most recently{" "}
+                <ExternalLink href="https://unfold.devfolio.co">Unfold &apos;23</ExternalLink> where I came 
+                2nd as the youngest winner. Over the years I&apos;ve received grants from the Government of 
                 India, CBSE, <ExternalLink href="https://solana.com">Solana</ExternalLink>, and{" "}
                 <ExternalLink href="https://polygon.technology">Polygon</ExternalLink> for my projects.
               </p>
@@ -136,9 +136,9 @@ export default function Page() {
                 <ExternalLink href="https://sierraventures.com">Sierra Ventures</ExternalLink>,{" "}
                 <ExternalLink href="https://gradientventures.com">Gradient Ventures</ExternalLink>, and{" "}
                 <ExternalLink href="https://peakxv.com">Peak XV</ExternalLink>. Even got to visit{" "}
-                <ExternalLink href="https://olacabs.com">Ola's</ExternalLink> office where they were doing 
+                <ExternalLink href="https://olacabs.com">Ola&apos;s</ExternalLink> office where they were doing 
                 human annotation, which was pretty cool. Had gaps in my knowledge when it came to business, 
-                couldn't really pull it off but got a lot of learnings.
+                couldn&apos;t really pull it off but got a lot of learnings.
               </p>
             </div>
         </section>
