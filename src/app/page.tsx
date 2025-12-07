@@ -66,10 +66,12 @@ export default function Page() {
               <p>
                 Most recently I was at <ExternalLink href="https://heypixa.ai">Pixa AI</ExternalLink> as 
                 a Founding Engineer and Researcher. Co-built <span className="text-ink font-medium">Luna</span>, 
-                a <span className="text-ink font-medium">speech-to-speech model</span> that 
+                a <span className="text-ink font-medium">SOTA speech model</span> that 
                 understands meaning not just words. Also worked on <span className="text-ink font-medium">neural audio codecs</span> and 
-                an <span className="text-ink font-medium">ASR</span> for how Indians actually speak, 
-                code-switching between Hindi and English. Built the data pipelines to make it all happen.
+                an <span className="text-ink font-medium">ASR model</span> for how Indians actually speak, 
+                code-switching between Hindi and English. The ASR was also <span className="text-ink font-medium">SOTA</span>, 
+                beating Eleven Labs Scribe, Whisper, Deepgram, and Sarvam&apos;s model on FLEURS Hindi benchmarks. 
+                Built the data pipelines to make it all happen.
               </p>
 
               <p>
