@@ -4,8 +4,10 @@ import { useEditor, EditorContent } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import Highlight from "@tiptap/extension-highlight"
 import Placeholder from "@tiptap/extension-placeholder"
+import Mathematics from "@tiptap/extension-mathematics"
 import { useEffect, useCallback, useRef } from "react"
 import TurndownService from "turndown"
+import "katex/dist/katex.min.css"
 
 interface NotesEditorProps {
   content: string
@@ -29,11 +31,19 @@ export default function NotesEditor({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: { levels: [1, 2, 3] },
+        heading: {
+          levels: [1, 2, 3],
+        },
       }),
       Highlight.configure({ multicolor: true }),
       Placeholder.configure({
-        placeholder: "Start taking notes...",
+        placeholder: "Start taking notes... Use $...$ for inline math, $$...$$ for block math",
+      }),
+      Mathematics.configure({
+        shouldRender: (state, pos, node) => {
+          const $pos = state.doc.resolve(pos)
+          return node.type.name === "text" && $pos.parent.type.name !== "codeBlock"
+        },
       }),
     ],
     content: content,
@@ -41,6 +51,28 @@ export default function NotesEditor({
     editorProps: {
       attributes: {
         class: "prose prose-sm max-w-none focus:outline-none min-h-full px-5 py-4 text-ink",
+      },
+      handleKeyDown: (view, event) => {
+        // Exit heading on Enter
+        if (event.key === "Enter" && !event.shiftKey) {
+          const { state } = view
+          const { selection } = state
+          const { $from } = selection
+          
+          // Check if we're at the end of a heading
+          if ($from.parent.type.name.startsWith("heading")) {
+            const endOfNode = $from.end()
+            if (selection.from === endOfNode) {
+              // Insert a paragraph after the heading
+              const tr = state.tr
+              tr.split(selection.from)
+              tr.setBlockType(selection.from + 1, selection.from + 1, state.schema.nodes.paragraph)
+              view.dispatch(tr)
+              return true
+            }
+          }
+        }
+        return false
       },
     },
     onUpdate: ({ editor }) => {
@@ -65,6 +97,17 @@ export default function NotesEditor({
       codeBlockStyle: "fenced",
     })
     
+    // Add rule for math
+    turndown.addRule('math', {
+      filter: (node) => {
+        return node.nodeName === 'SPAN' && node.classList.contains('katex')
+      },
+      replacement: (content, node) => {
+        const tex = (node as HTMLElement).getAttribute('data-latex') || content
+        return `$${tex}$`
+      }
+    })
+    
     const markdown = `# ${paperTitle}\n\n${turndown.turndown(editor.getHTML())}`
     
     const blob = new Blob([markdown], { type: "text/markdown" })
@@ -86,6 +129,7 @@ export default function NotesEditor({
             className={`p-2 rounded-md font-sans text-xs font-bold transition-colors ${
               editor?.isActive("bold") ? "bg-ink/10 text-ink" : "text-ink-muted hover:text-ink hover:bg-ink/5"
             }`}
+            title="Bold"
           >
             B
           </button>
@@ -94,6 +138,7 @@ export default function NotesEditor({
             className={`p-2 rounded-md font-sans text-xs italic transition-colors ${
               editor?.isActive("italic") ? "bg-ink/10 text-ink" : "text-ink-muted hover:text-ink hover:bg-ink/5"
             }`}
+            title="Italic"
           >
             I
           </button>
@@ -103,6 +148,7 @@ export default function NotesEditor({
             className={`p-2 rounded-md font-sans text-xs transition-colors ${
               editor?.isActive("heading", { level: 2 }) ? "bg-ink/10 text-ink" : "text-ink-muted hover:text-ink hover:bg-ink/5"
             }`}
+            title="Heading"
           >
             H2
           </button>
@@ -111,16 +157,56 @@ export default function NotesEditor({
             className={`p-2 rounded-md font-sans text-xs transition-colors ${
               editor?.isActive("bulletList") ? "bg-ink/10 text-ink" : "text-ink-muted hover:text-ink hover:bg-ink/5"
             }`}
+            title="Bullet List"
           >
             •
+          </button>
+          <button
+            onClick={() => editor?.chain().focus().toggleCodeBlock().run()}
+            className={`p-2 rounded-md font-sans text-xs font-mono transition-colors ${
+              editor?.isActive("codeBlock") ? "bg-ink/10 text-ink" : "text-ink-muted hover:text-ink hover:bg-ink/5"
+            }`}
+            title="Code Block"
+          >
+            {"</>"}
           </button>
           <button
             onClick={() => editor?.chain().focus().toggleHighlight().run()}
             className={`p-2 rounded-md font-sans text-xs transition-colors ${
               editor?.isActive("highlight") ? "bg-amber-100 text-amber-700" : "text-ink-muted hover:text-ink hover:bg-ink/5"
             }`}
+            title="Highlight"
           >
             ✦
+          </button>
+          <div className="w-px h-5 bg-ink/10 mx-1" />
+          <button
+            onClick={() => {
+              editor?.chain().focus().insertContent('$').insertContent(' ').insertContent('$').run()
+              // Move cursor back between the $s
+              const pos = editor?.state.selection.from
+              if (pos) {
+                editor?.commands.setTextSelection(pos - 2)
+              }
+            }}
+            className="p-2 rounded-md font-sans text-xs transition-colors text-ink-muted hover:text-ink hover:bg-ink/5"
+            title="Insert inline math ($...$)"
+          >
+            𝑥²
+          </button>
+          <button
+            onClick={() => {
+              editor?.chain().focus().insertContent('\n$$\n').insertContent('\n$$\n').run()
+              // Move cursor back between the $$s
+              const pos = editor?.state.selection.from
+              if (pos) {
+                editor?.commands.setTextSelection(pos - 4)
+              }
+            }}
+            className="p-2 rounded-md font-sans text-xs transition-colors text-ink-muted hover:text-ink hover:bg-ink/5"
+            title="Insert block math ($$...$$)"
+          >
+            ∑
           </button>
         </div>
 
