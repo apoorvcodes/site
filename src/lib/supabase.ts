@@ -32,6 +32,7 @@ export interface ResearchPaper {
   abstract: string | null
   status: PaperStatus
   outcome: string | null // notes after reading
+  current_page: number | null // reading progress
   created_at: string
 }
 

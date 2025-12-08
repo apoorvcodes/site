@@ -568,6 +568,9 @@ export default function DumpPage() {
                     </div>
                     
                     <div className="flex flex-col gap-1 shrink-0">
+                      {paper.url && (
+                        <a href="/dump/reader" onClick={() => localStorage.setItem("reader_paper_id", paper.id)} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-blue-500 hover:text-blue-400 transition-all">Read</a>
+                      )}
                       {paper.url && !paper.authors && (
                         <button onClick={() => refetchMetadata(paper)} disabled={loading} className="opacity-0 group-hover:opacity-100 font-sans text-xs text-ink-muted hover:text-ink transition-all">Fetch</button>
                       )}
