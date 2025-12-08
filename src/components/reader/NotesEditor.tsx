@@ -39,12 +39,7 @@ export default function NotesEditor({
       Placeholder.configure({
         placeholder: "Start taking notes... Use $...$ for inline math, $$...$$ for block math",
       }),
-      Mathematics.configure({
-        shouldRender: (state, pos, node) => {
-          const $pos = state.doc.resolve(pos)
-          return node.type.name === "text" && $pos.parent.type.name !== "codeBlock"
-        },
-      }),
+      Mathematics,
     ],
     content: content,
     immediatelyRender: false,
