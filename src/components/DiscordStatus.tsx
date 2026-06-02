@@ -4,31 +4,30 @@ import { useLanyard } from "react-use-lanyard"
 
 import { DISCORD_USER_ID } from "@/util"
 
-const statusColors = {
-  online: "bg-green-500",
-  idle: "bg-yellow-500",
-  dnd: "bg-red-500",
-  offline: "bg-gray-500",
+const labels = {
+  online: "online",
+  idle: "idle",
+  dnd: "do not disturb",
+  offline: "offline",
 } as const
 
-const statusMappings = {
-  online: "Online",
-  idle: "Idle",
-  dnd: "Do Not Disturb",
-  offline: "Offline",
+const dotColor = {
+  online: "bg-emerald-600",
+  idle: "bg-amber-500",
+  dnd: "bg-red-600",
+  offline: "bg-ink-mute",
 } as const
 
 export default function DiscordStatus() {
-  const { data, isLoading } = useLanyard({ userId: "924252039737905162" })
+  const { data, isLoading } = useLanyard({ userId: DISCORD_USER_ID })
 
-  const color = isLoading ? "bg-green-500" : statusColors[data?.data.discord_status ?? "online"]
+  const status = data?.data.discord_status ?? "offline"
+  const isReady = !isLoading && data
 
-  const status = data?.data.discord_status
-  console.log(status)
   return (
-    <aside className="flex items-center gap-2 font-semibold">
-      <div className={`h-3 w-3 rounded-full ${color}`} />
-      <p className="text-left">{status ? statusMappings[status] : statusMappings["online"]}</p>
-    </aside>
+    <span className="inline-flex items-center gap-1.5">
+      <span className={`h-1.5 w-1.5 rounded-full ${isReady ? dotColor[status] : "bg-ink-mute"}`} />
+      <span>{isReady ? labels[status] : "—"}</span>
+    </span>
   )
 }

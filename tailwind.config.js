@@ -7,10 +7,23 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        serif: ["var(--font-newsreader)", "ui-serif", "Georgia", "serif"],
+        display: ["var(--font-instrument-serif)", "ui-serif", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+      },
       colors: {
-        "light-gray": "#bebebe",
-        "midnight-violet": "#1c1b22",
-        "pink": "#e4717a",
+        paper: "#f6f1e7",
+        "paper-deep": "#efe8d8",
+        ink: "#1a1714",
+        "ink-soft": "#3a342d",
+        "ink-mute": "#6b6357",
+        rule: "#d8cfbb",
+        accent: "#8a2a1a",
+      },
+      maxWidth: {
+        prose: "640px",
+        page: "680px",
       },
     },
   },

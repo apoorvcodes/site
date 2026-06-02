@@ -1,125 +1,145 @@
 import Image from "next/image"
-import { motion } from "framer-motion"
 
-import { calculateAge } from "@/util"
 import CurrentTime from "@/components/CurrentTime"
 import DiscordStatus from "@/components/DiscordStatus"
 import ExternalLink from "@/components/ExternalLink"
+import Section from "@/components/Section"
+import Spotify from "@/components/Spotify"
 import profilePicture from "../../public/logo.jpeg"
 
 export default function Page() {
   return (
-    <main className="flex min-h-full w-full grow content-stretch p-2 md:p-5">
-      <div className="flex grow flex-col items-center justify-center space-y-10 overflow-hidden bg-fixed bg-center p-5 md:p-0">
-        <div className="flex w-full max-w-[750px] flex-col gap-y-3 rounded-lg">
-          <div className="flex items-center gap-x-1">
-            <Image
-              alt="Profile Picture"
-              className="h-[70px] w-[70px] rounded-full bg-cover transition-transform duration-300 hover:scale-105 md:h-[80px] md:w-[80px] lg:h-[100px] lg:w-[100px]"
-              priority
-              src={profilePicture}
-            />
-          </div>
-
-          <section className="w-full">
-            <aside className="flex items-center gap-x-1 rounded-xl text-sm dark:text-gray-400">
-              <DiscordStatus />
-              &mdash;
-              <CurrentTime />
-            </aside>
-            <h1 className="text-4xl font-bold pt-1">Apoorv Singh</h1>
-          </section>
+    <main className="mx-auto w-full max-w-page px-6 pb-8 pt-16 md:pt-24">
+      <header className="mb-16 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+        <div>
+          <Image
+            alt="Apoorv Singh"
+            className="mb-6 h-14 w-14 rounded-full grayscale transition duration-500 hover:grayscale-0 md:h-16 md:w-16"
+            priority
+            src={profilePicture}
+          />
+          <h1 className="font-display text-5xl italic leading-[0.95] tracking-tight text-ink md:text-6xl">
+            Apoorv Singh
+          </h1>
+          <p className="mt-3 text-[17px] text-ink-soft">
+            Developer &amp; researcher. Bangalore, soon San Francisco.
+          </p>
         </div>
 
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
-            Who am I?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
-          </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Hey! I am Apoorv, an 18-year-old developer and researcher. I was born in a small town called Varanasi but now I&apos;ve shifted to Bangalore. I decided to skip college and focus on building cool stuff instead. I&apos;m super into AI and love tinkering with backend systems. Right now I am now planning to move to San Francisco by the end of this year - pretty excited about that!
-          </span>
-        </section>
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
-            What I love?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
-          </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            A bit about me is that I love watching football - I&apos;m a huge Barça fan (PS: hope we win CL this year lol). I also love watching anime, 
-            especially seinen ones. My absolute favorites are{" "}
-            <ExternalLink href="https://www.imdb.com/title/tt7984734/">Made in Abyss</ExternalLink> and{" "}
-            <ExternalLink href="https://www.imdb.com/title/tt10233448/">Vinland Saga</ExternalLink>.
-          </span>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            As for my passions, I absolutely love LLMs, transformers and hardware. Back in school, I spent most of my time bunking classes 
-            and building stuff in the labs (I was pretty damn good at it too!). You can check out some of my hardware projects on my{" "}
-            <ExternalLink href="https://github.com/apoorvcodes">Github Profile</ExternalLink>.
-          </span>
-        </section>
+        <aside className="flex flex-col gap-1.5 whitespace-nowrap font-mono text-[11px] uppercase tracking-[0.18em] text-ink-mute md:items-end md:pt-3">
+          <CurrentTime />
+          <DiscordStatus />
+          <Spotify />
+        </aside>
+      </header>
 
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
-            What have I done?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
-          </h1>
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            The first thing I built was an NLP-based COVID tracking bot for spreading awareness on Discord. It went viral at its peak—I handled 500K+ users, and the bot was also verified on Discord. (I was just 14, had to use my dad&apos;s ID.) I reverse-engineered Discord for hosting self-bots (got three IDs banned), then went on to learn Golang.
-          </span>
+      <Section title="Who I am">
+        <p>
+          I&apos;m 19. Born in Varanasi, in Bangalore the last few years, headed to San Francisco
+          soon on an O-1. I never went to college; I&apos;d been building things long enough by
+          then that stopping for a few more years of lectures didn&apos;t make sense.
+        </p>
+        <p>
+          These days I&apos;m an AI scientist and research engineer at{" "}
+          <ExternalLink href="https://smallest.ai">Smallest</ExternalLink>. Most of my time goes
+          into Pulse, our speech-to-text — one of the fastest STTs in the world per{" "}
+          <ExternalLink href="https://artificialanalysis.ai">Artificial Analysis</ExternalLink>.
+          I&apos;m one of the primary researchers on it and built our foundational realtime
+          variant, which now sits among the best realtime STTs out there. On the scale side, I
+          recently took Pulse Pro from around 4 concurrent streams on a single GPU to 150+ in
+          production for one of our enterprise customers. The rest of my time is on Hydra: a
+          full-duplex, asynchronous-thinking speech-to-speech model — where turn-taking and
+          thought start to blur into the same thing.
+        </p>
+      </Section>
 
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            I built a framework like Express but around 50x faster for personal use—got over 150 stars organically. As per my knowledge, around five companies use it right now, including major projects my institute maintains. Moved to crypto for the fun of it, came top 5 in my first hackathon (biggest multichain hackathon at the time), was a core member in Saturn. We received a $50K grant from Sandeep Nailwal (didn&apos;t work out well).
-          </span>
+      <Section title="The work so far">
+        <p>
+          The first thing I built that mattered was an NLP-powered Discord bot, at 14, for COVID
+          awareness. By 15 it was sitting at 500K users and carrying a Discord verification badge
+          — I&apos;d registered it under my dad&apos;s ID because I was too young to hold the
+          account myself. I shut it down once COVID wound down; the job was done. Along the way I
+          reverse-engineered Discord to host self-bots (three accounts banned in the process),
+          which is how I picked up Go in the first place.
+        </p>
+        <p>
+          Also at 15: Minima, a Go web framework. Express-shaped on the outside; roughly 50×
+          faster underneath. About 150 stars on its own, and last I checked still running in
+          production at a handful of companies.
+        </p>
+        <p>
+          A few years inside crypto followed. Core team at Saturn. A $50K grant from Sandeep
+          Nailwal (Polygon co-founder) on a project that didn&apos;t pan out. I won{" "}
+          <ExternalLink href="https://unfold.devfolio.co">Unfold</ExternalLink> twice —
+          India&apos;s largest multichain hackathon — and a long string of regional ones across
+          that stretch, youngest in the room each time. About $65K in grants and prizes by the
+          end of it.
+        </p>
+        <p>
+          Hardware took up most of 16 to 18, mostly lab time when I should have been in class. A
+          small-form ventilator. A network-wide exhaust-monitoring and filtering simulation for
+          two-wheelers that read tailpipe output and cleaned it inline. A pair of glasses for the
+          blind that ran a camera through realtime scene transcription. Some of it placed at
+          national fairs; most of it I just wanted to see if I could build.
+        </p>
 
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Did hackathons in between, won around five premier hacks, wrote a couple of compilers here and there. In total, I&apos;ve received over <ExternalLink href="https://www.xe.com/currencyconverter/convert/?Amount=65000&From=USD&To=INR">$65K</ExternalLink> in grants and prizes.
-          </span>
+        <p
+          aria-hidden
+          className="select-none py-2 text-center font-display text-2xl tracking-[0.5em] text-ink-mute"
+        >
+          ⁂
+        </p>
 
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            This was my first phase of life.
-          </span>
+        <p>
+          Around the same stretch, two of India&apos;s largest student competitions —{" "}
+          <ExternalLink href="https://youthideathon.in">Youth Ideathon</ExternalLink> and the{" "}
+          <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">
+            CBSE Science Exhibition
+          </ExternalLink>
+          , each with more than 150K participants. I&apos;m still the only person to podium at
+          both. Winning Youth Ideathon also got me into a room of five kids presenting edtech
+          work to Narendra Modi.
+        </p>
+        <p>
+          The same year, I made the{" "}
+          <ExternalLink href="https://www.symbolic.capital/fellowship">
+            Nailwal Fellowship
+          </ExternalLink>{" "}
+          shortlist — $100K to drop out and go full-time on web3. I had a few months of high
+          school left and didn&apos;t want to skip the ending for a pivot I wasn&apos;t sure I
+          wanted. (Never ended up going to college anyway.)
+        </p>
+        <p>
+          Also at 17: <ExternalLink href="https://heyconn.ai">Connect AI</ExternalLink>. A
+          Jarvis-shaped human–computer interface — language in, action out across a full machine.
+          The launch pulled 500K views in a day on Twitter; inbound from Peak XV, Sierra, Nexus,
+          and Gradient; warm notes from the founders of Loom and Gumroad. It never quite
+          resolved into a business, so I shelved it. The bones of it are coming back this year
+          for something larger.
+        </p>
+        <p>
+          WTFund a little after that: top 3% of applicants on an idea I started the night before
+          the deadline. I built the whole product over the application window — a fully async AI
+          web handler for white-collar browser tasks, with a few small models I trained for it.
+          Got cut at the end for being too early, which I&apos;ll take.
+        </p>
+        <p>
+          Then a year at <ExternalLink href="https://heypixа.ai">HeyPixa</ExternalLink>, 18 to
+          19, on voice research. I built the data pipelines that produced more than 500K hours of
+          training audio, and ran the post-training and final SFTs for Luna — one of the first
+          foundational models to come out of India, and a speech-to-speech model at that. Pixa
+          ships to UK stores this year.
+        </p>
+      </Section>
 
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            In my senior years, I did a lot of huge science fairs. I&apos;m still the only kid to podium in both <ExternalLink href="https://youthideathon.in">Youth Ideathon</ExternalLink> (Won in &apos;22) and the <ExternalLink href="https://cbseit.in/cbse/2022/sciex/index.html">CBSE Science Exhibition</ExternalLink> (Podium &apos;22).
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            When I was 17, I was offered the <ExternalLink href="https://www.symbolic.capital/fellowship">Nailwal Fellowship</ExternalLink> ($100K in total) but decided not to take it. Apart from this, I came 2nd in the biggest multichain hackathon (<ExternalLink href="https://unfold.devfolio.co">Unfold &apos;23</ExternalLink>)—once again, the youngest winner.
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Later, I moved out of crypto and focused on AI and human interfaces as a whole. I built <ExternalLink href="https://heyconn.ai">Connect AI</ExternalLink>—a Jarvis-like human-computer interface that could convert thoughts into action and perform tasks like a human. We went viral on Twitter—500K views in a day—top founders and VCs approaching for investment. Couldn&apos;t translate well as a business, so I moved away from it. (Some sneak peeks for later—I&apos;m gonna reuse it at the end of the year for something even bigger.)
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            I also wrote the AI pipeline and benchmarks for kids&apos; AI at <ExternalLink href="https://heypixа.ai">HeyPixa.ai</ExternalLink>—just for fun. Pixa is gonna be in UK stores by the end of the year.
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Then I built a Zapier-like service but for browser agents—in a week—for WTFund. Went till finals. Got rejected &apos;cause I was too early.
-          </span>
-
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Now, I&apos;ve co-founded a research lab with a couple of my friends from IITs, and we&apos;re soon gonna release our first research!
-          </span>
-        </section>
-
-        <section className="flex w-full max-w-[750px] flex-col gap-y-3">
-          <h1 className="m-0 flex w-full max-w-[750px] items-center gap-x-3 font-semibold hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-300">
-            Plans and Future?
-            <div className="h-[2px] grow rounded-full bg-black/20 dark:bg-white/20 transition-colors duration-300 hover:bg-indigo-500/50" />
-          </h1>
-          
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            Currently conducting voice-to-voice research at my AI lab and building a prompt editor for in-house usage. Long-term, I have major plans for human-computer interfaces, particularly in hardware, scheduled for the end of the year—something that will revolutionize human interactions forever!
-          </span>
-          
-          <span className="w-full max-w-[750px] text-justify text-gray-700 dark:text-light-gray hover:text-gray-900 dark:hover:text-white transition-colors duration-300">
-            If you&apos;re an engineer interested in working with the lab or on the HCI project, feel free to email or DM me.
-          </span>
-        </section>
-
-      </div>
+      <Section title="What’s next">
+        <p>San Francisco, soon, on an O-1.</p>
+        <p>
+          In the meantime, writing — a couple of workshop papers and some conference work on the
+          way. Past that, I want to get back into full-duplex systems and hardware.
+        </p>
+        <p>If you want to hack around on any of this, hit me up.</p>
+      </Section>
     </main>
   )
 }
